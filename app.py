@@ -348,13 +348,13 @@ elif choice == "🖼️ ছবি গ্যালারি":
     st.subheader("🖼️ স্কুলের বিভিন্ন অনুষ্ঠান ও খেলাধুলার ছবি")
     
     pic1_path = "school_pic1.jpg"
-    
+    pic2_path = "school_pic2.jpg"
     
     col1, col2 = st.columns(2)
     
     with col1:
         if os.path.exists(pic1_path):
-            st.image(pic1_path, caption="ফ্র প্যালেস্টাইন", use_column_width=True)
+            st.image(pic1_path, caption="ফ্রি প্যালেস্টাইন", use_column_width=True)
         else:
             st.warning("📷 'school_pic1.jpg' ছবিটি ফোল্ডারে খুঁজে পাওয়া যায়নি।")
             
