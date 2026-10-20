@@ -86,7 +86,7 @@ elif choice == "📝 ভর্তি তথ্য ও ফরম":
         guardian_name = st.text_input("অভিভাবকের নাম:")
         phone_number = st.text_input("যোগাযোগের জন্য মোবাইল নম্বর:")
         
-        submitted = st.form_submit_form_button("আবেদন জমা দিন")
+        submitted = st.form_submit_button("আবেদন জমা দিন")
         if submitted:
             if student_name and phone_number:
                 st.success(f"🎉 ধন্যবাদ! {student_name}-এর প্রাথমিক আবেদনটি সফলভাবে সিস্টেমে জমা হয়েছে। আমরা শীঘ্রই {phone_number} নম্বরে যোগাযোগ করব।")
