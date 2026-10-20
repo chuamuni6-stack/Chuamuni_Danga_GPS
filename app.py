@@ -178,7 +178,7 @@ elif choice == "🔍 রেজাল্ট ও আইডি":
             st.error("❌ আইডি পাওয়া যায়নি।")
 
 # ==========================================
-# ৫. ভর্তি ফরম সেকশন (এক্সেল ফাইল কানেক্টিভিটি সহ নির্দিষ্ট কোড)
+# ৫. ভর্তি ফরম সেকশন (সম্পূর্ণ ফ্রেশ ডাটাবেজ টেবিল লজিকসহ)
 # ==========================================
 elif choice == "📝 ভর্তি তথ্য ও ফরম":
     st.markdown("### 📝 নতুন ছাত্র-ছাত্রী ভর্তি তথ্য ও আবেদন")
@@ -195,6 +195,8 @@ elif choice == "📝 ভর্তি তথ্য ও ফরম":
         if submitted:
             if student_name and phone_number:
                 csv_file = "admissions.csv"
+                
+                # সম্পূর্ণ বিশুদ্ধ বাংলা বানানে নতুন ডেটা
                 new_data = pd.DataFrame([{
                     "শিক্ষার্থীর নাম": student_name,
                     "ভর্তির শ্রেণী": apply_class,
@@ -202,10 +204,17 @@ elif choice == "📝 ভর্তি তথ্য ও ফরম":
                     "মোবাইল নম্বর": phone_number
                 }])
                 
+                # যদি ফাইল আগে থেকে থাকে
                 if os.path.exists(csv_file):
-                    old_data = pd.read_csv(csv_file)
-                    updated_data = pd.concat([old_data, new_data], ignore_index=True)
-                    updated_data.to_csv(csv_file, index=False)
+                    try:
+                        old_data = pd.read_csv(csv_file)
+                        # যদি আগের ফাইলে কোনো ভুল কলাম বা None থাকে, তবে তা পরিষ্কার করে শুধু সঠিক কলামগুলো রাখবে
+                        valid_columns = ["শিক্ষার্থীর নাম", "ভর্তির শ্রেণী", "অভিভাবকের নাম", "মোবাইল নম্বর"]
+                        old_data = old_data.reindex(columns=valid_columns)
+                        updated_data = pd.concat([old_data, new_data], ignore_index=True)
+                        updated_data.to_csv(csv_file, index=False)
+                    except:
+                        new_data.to_csv(csv_file, index=False)
                 else:
                     new_data.to_csv(csv_file, index=False)
                 
@@ -214,13 +223,30 @@ elif choice == "📝 ভর্তি তথ্য ও ফরম":
             else:
                 st.warning("⚠️ দয়া করে শিক্ষার্থীর নাম এবং মোবাইল নম্বর অবশ্যই সঠিকভাবে পূরণ করুন।")
 
-    # প্রধান শিক্ষকের গোপন প্যানেল
+    # প্রধান শিক্ষকের গোপন প্যানেল (ভুল ডেটা ডিলিট করার বোতামসহ)
     st.markdown("---")
     with st.expander("🔐 প্রধান শিক্ষকের প্যানেল (আবেদন তালিকা ডাউনলোড)"):
         password = st.text_input("গোপন পাসওয়ার্ড দিন:", type="password")
         if password == "admin123":
+            
+            # ডাটাবেজ ডিলিট করার বোতাম (রিসেট করার জন্য)
+            if st.button("🗑️ আগের সকল ভুল টেস্ট ডেটা সম্পূর্ণ মুছে ফেলুন (রিসেট করুন)"):
+                if os.path.exists("admissions.csv"):
+                    os.remove("admissions.csv")
+                    st.success("♻️ ডাটাবেজ সফলভাবে রিসেট করা হয়েছে! পেজটি একবার রিফ্রেশ (Refresh) করুন।")
+                else:
+                    st.info("📂 ডাটাবেজ অলরেডি পরিষ্কার আছে।")
+            
+            st.markdown("---")
+            
+            # টেবিল প্রদর্শন ও ডাউনলোড
             if os.path.exists("admissions.csv"):
                 df_download = pd.read_csv("admissions.csv")
+                
+                # ডাবল কলাম ফিল্টার লজিক
+                valid_columns = ["শিক্ষার্থীর নাম", "ভর্তির শ্রেণী", "অভিভাবকের নাম", "মোবাইল নম্বর"]
+                df_download = df_download.reindex(columns=valid_columns)
+                
                 st.dataframe(df_download)
                 st.download_button(
                     label="📥 সম্পূর্ণ এক্সেল তালিকা (CSV) ডাউনলোড করুন",
@@ -230,6 +256,7 @@ elif choice == "📝 ভর্তি তথ্য ও ফরম":
                 )
             else:
                 st.info("📂 এখনো কোনো নতুন ভর্তি আবেদন জমা পড়েনি।")
+
 # ৬. ছবি গ্যালারি
 elif choice == "🖼️ ছবি গ্যালারি":
     st.subheader("🖼️ স্কুলের বিভিন্ন অনুষ্ঠান ও খেলাধুলার ছবি")
