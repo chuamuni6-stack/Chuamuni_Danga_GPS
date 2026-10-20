@@ -181,7 +181,9 @@ elif choice == "📅 দৈনিক ক্লাস রুটিন":
                                 "শ্রেণী ও বিষয়": ["৩য় শ্রেণী - বাংলা", "৪র্থ শ্রেণী - বাংলা", "৩য় শ্রেণী - বাওবি"]
                             }
                       
-            st.dataframe(pd.DataFrame(t_data), use_container_width=True, hide_index=True)
+            df = pd.DataFrame(t_data)
+                df.index = df.index + 1  # ইন্ডেক্স ১ থেকে শুরু করার জন্য
+                st.dataframe(df, use_container_width=True)  # hide_index বাদ দেওয়া হয়েছে
             
         # ৩. কামরুজ্জামান (সহকারী শিক্ষক - T2) এর রুটিন
         elif "কামরুজ্জামান" in teacher_choice:
