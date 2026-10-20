@@ -1,0 +1,24 @@
+[tool.briefcase]
+project_name = "Chuamunidanga School App"
+bundle = "com.chuamunidanga"
+version = "1.0.0"
+url = "https://streamlit.app"
+author = "Mustafizur Rahman"
+author_email = "school@email.com"
+
+[tool.briefcase.app.schoolapp]
+formal_name = "Chuamunidanga School"
+description = "Official App for Chuamuni Danga Government Primary School"
+icon = "school_icon"
+
+[tool.briefcase.app.schoolapp.macOS]
+requires = []
+
+[tool.briefcase.app.schoolapp.linux]
+requires = []
+
+[tool.briefcase.app.schoolapp.windows]
+requires = []
+
+[tool.briefcase.app.schoolapp.android]
+requires = ["streamlit", "pandas"]
