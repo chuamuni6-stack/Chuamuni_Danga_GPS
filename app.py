@@ -182,8 +182,8 @@ elif choice == "📅 দৈনিক ক্লাস রুটিন":
                             }
                       
             df = pd.DataFrame(t_data)
-                df.index = df.index + 1  # ইন্ডেক্স ১ থেকে শুরু করার জন্য
-                st.dataframe(df, use_container_width=True)  # hide_index বাদ দেওয়া হয়েছে
+            df.index = df.index + 1  # ইন্ডেক্স ১ থেকে শুরু করার জন্য
+            st.dataframe(df, use_container_width=True)  # hide_index বাদ দেওয়া হয়েছে
             
         # ৩. কামরুজ্জামান (সহকারী শিক্ষক - T2) এর রুটিন
         elif "কামরুজ্জামান" in teacher_choice:
