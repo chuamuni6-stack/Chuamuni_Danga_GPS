@@ -143,7 +143,9 @@ elif choice == "📅 দৈনিক ক্লাস রুটিন":
                                 "শ্রেণী ও বিষয়": ["১ম শ্রেণী - ইংরেজি", "২য় শ্রেণী - ইংরেজি", "৩য় শ্রেণী - ইংরেজি", "৩য় শ্রেণী - ধর্ম", "৫ম শ্রেণী - ধর্ম", "৪র্থ শ্রেণী - শিল্পকলা"]
                             }
           
-            st.dataframe(pd.DataFrame(t_data), use_container_width=True, hide_index=True)
+            df = pd.DataFrame(t_data)
+            df.index = df.index + 1  # ইন্ডেক্স ১ থেকে শুরু করার জন্য
+            st.dataframe(df, use_container_width=True)  # hide_index বাদ দেওয়া হয়েছে
             
         # ২. সন্ধ্যা সরকার (সহকারী শিক্ষক - T1) এর রুটিন
         elif "সন্ধ্যা সরকার" in teacher_choice:
