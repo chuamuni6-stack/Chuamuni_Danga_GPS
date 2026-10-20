@@ -47,17 +47,63 @@ elif choice == "📅 ক্লাস রুটিন":
     else:
         st.write(f"📊 **{class_name}**-এর রুটিনটি খুব দ্রুতই এখানে যুক্ত করা হবে।")
 
-# ৩. যোগাযোগের তালিকা অংশ (প্রধান শিক্ষকের নতুন তথ্য আপডেট করা হয়েছে)
+# ৩. যোগাযোগের তালিকা অংশ (আপনার স্কুলের ৪ জন শিক্ষকের আসল তথ্য ও ছবিসহ)
 elif choice == "📞 যোগাযোগের তালিকা":
     st.subheader("📞 শিক্ষক ও কর্মচারীদের যোগাযোগের তালিকা")
-    
     st.markdown("### 👨‍🏫 প্রশাসন ও শিক্ষকবৃন্দ")
-    st.success("👨‍🏫 **প্রধান শিক্ষক (ভারপ্রাপ্ত):** মোঃ মোস্তাফিজুর রহমান\n\n📱 মোবাইল: 01726509780")
-    st.info("👩‍🏫 **শ্রেণী শিক্ষিকা (প্রাক-প্রাথমিক):** সন্ধ্যা সরকার\n\n📱 মোবাইল: 01761178041")
-    st.info("👩‍🏫 **শ্রেণী শিক্ষিকা (প্রাক-প্রাথমিক):** রেখা রাণী\n\n📱 মোবাইল: 01402970562")
-    
-    st.markdown("### 🛠️ অফিস ও কর্মচারী")
-    st.code("👨‍💼 রাসেল আহমেদ (অফিস সহকারী) - ০১৬৪৪-৫৫৬৬৭৭\n👨‍🔧 কুদ্দুস মিয়া (নিরাপত্তা কর্মী) - ০১৫৫৫-৬৬৭৭৮৮")
+    st.markdown("---")
+
+    # ------------------ ১. প্রধান শিক্ষক (ভারপ্রাপ্ত) ------------------
+    col1_img, col1_txt = st.columns([1, 2]) # [১:২] অনুপাতে স্ক্রিন ভাগ করা হয়েছে
+    with col1_img:
+        if os.path.exists("headmaster.jpg"):
+            st.image("headmaster.jpg", use_container_width=True)
+        else:
+            st.warning("📷 ছবি নেই")
+    with col1_txt:
+        st.success("👨‍🏫 **প্রধান শিক্ষক (ভারপ্রাপ্ত)**")
+        st.write("👤 **মোঃ মোস্তাফিজুর রহমান**")
+        st.write("📱 মোবাইল: 01726509780")
+    st.markdown("---")
+
+    # ------------------ ২. সহকারী শিক্ষক (সন্ধ্যা সরকার) ------------------
+    col2_img, col2_txt = st.columns([1, 2])
+    with col2_img:
+        if os.path.exists("teacher1.jpg"):
+            st.image("teacher1.jpg", use_container_width=True)
+        else:
+            st.warning("📷 ছবি নেই")
+    with col2_txt:
+        st.info("👩‍🏫 **সহকারী শিক্ষক**")
+        st.write("👤 **সন্ধ্যা সরকার**")
+        st.write("📱 মোবাইল: 01761178041")
+    st.markdown("---")
+
+    # ------------------ ৩. সহকারী শিক্ষক (প্রাক-প্রাথমিক - রেখা রাণী) ------------------
+    col3_img, col3_txt = st.columns([1, 2])
+    with col3_img:
+        if os.path.exists("teacher2.jpg"):
+            st.image("teacher2.jpg", use_container_width=True)
+        else:
+            st.warning("📷 ছবি নেই")
+    with col3_txt:
+        st.info("👩‍🏫 **সহকারী শিক্ষক (প্রাক-প্রাথমিক)**")
+        st.write("👤 **রেখা রাণী**")
+        st.write("📱 মোবাইল: 01402970562")
+    st.markdown("---")
+
+    # ------------------ ৪. সহকারী শিক্ষক (মো:গোলাম রব্বানী) ------------------
+    col4_img, col4_txt = st.columns([1, 2])
+    with col4_img:
+        if os.path.exists("teacher3.jpg"):
+            st.image("teacher3.jpg", use_container_width=True)
+        else:
+            st.warning("📷 ছবি নেই")
+    with col4_txt:
+        st.info("👩‍🏫 **সহকারী শিক্ষক**")
+        st.write("👤 **মো:গোলাম রব্বানী**")
+        st.write("📱 মোবাইল: 01767076256")
+    st.markdown("---")
 
 # ৪. রেজাল্ট ও আইডি অংশ
 elif choice == "🔍 রেজাল্ট ও আইডি":
