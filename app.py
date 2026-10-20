@@ -180,12 +180,12 @@ elif choice == "🔍 রেজাল্ট ও আইডি":
 # ==========================================
 # ৫. ভর্তি ফরম সেকশন (এক্সেল ফাইল কানেক্টিভিটি সহ নির্দিষ্ট কোড)
 # ==========================================
-elif choice == "📝 ডিজিটাল ভর্তি ফরম":
+elif choice == "📝 ভর্তি তথ্য ও ফরম":
     st.markdown("### 📝 নতুন ছাত্র-ছাত্রী ভর্তি তথ্য ও আবেদন")
     
     st.markdown("#### 📩 অনলাইনের সাধারণ প্রাথমিক আবেদন ফরম")
     with st.form("admission_form"):
-        student_name = st.text_input("শিক্ষার্থীর পুরো নাম (বাংলায়):")
+        student_name = st.text_input("शिक्षার্থীর পুরো নাম (বাংলায়):")
         apply_class = st.selectbox("ভর্তির ইচ্ছুক শ্রেণী:", ["প্রাক-প্রাথমিক", "১ম শ্রেণী", "২য় শ্রেণী", "৩য় শ্রেণী", "৪র্থ শ্রেণী", "৫ম শ্রেণী"])
         guardian_name = st.text_input("অভিভাবকের নাম:")
         phone_number = st.text_input("যোগাযোগের জন্য মোবাইল নম্বর:")
@@ -194,18 +194,14 @@ elif choice == "📝 ডিজিটাল ভর্তি ফরম":
         
         if submitted:
             if student_name and phone_number:
-                # এক্সেল শিট ফাইলের নাম
                 csv_file = "admissions.csv"
-                
-                # নতুন অভিভাবকের পাঠানো ডেটা স্ট্রাকচার
                 new_data = pd.DataFrame([{
-                    "শিক্ষার্থীর নাম": student_name,
+                    "शिक्षার্থীর নাম": student_name,
                     "ভর্তির শ্রেণী": apply_class,
                     "অভিভাবকের নাম": guardian_name,
                     "মোবাইল নম্বর": phone_number
                 }])
                 
-                # ফাইলটি আগে থেকে থাকলে তার সাথে নতুন ডেটা যোগ হবে, না থাকলে নতুন ফাইল তৈরি হবে
                 if os.path.exists(csv_file):
                     old_data = pd.read_csv(csv_file)
                     updated_data = pd.concat([old_data, new_data], ignore_index=True)
@@ -218,18 +214,14 @@ elif choice == "📝 ডিজিটাল ভর্তি ফরম":
             else:
                 st.warning("⚠️ দয়া করে শিক্ষার্থীর নাম এবং মোবাইল নম্বর অবশ্যই সঠিকভাবে পূরণ করুন।")
 
-    # প্রধান শিক্ষকের জন্য ডাটাশিট ডাউনলোড করার বিশেষ প্যানেল
+    # প্রধান শিক্ষকের গোপন প্যানেল
     st.markdown("---")
     with st.expander("🔐 প্রধান শিক্ষকের প্যানেল (আবেদন তালিকা ডাউনলোড)"):
         password = st.text_input("গোপন পাসওয়ার্ড দিন:", type="password")
-        
-        # ডিফল্ট পাসওয়ার্ড 'admin123' দেওয়া হয়েছে, আপনি চাইলে পরিবর্তন করতে পারেন
         if password == "admin123":
             if os.path.exists("admissions.csv"):
                 df_download = pd.read_csv("admissions.csv")
                 st.dataframe(df_download)
-                
-                # এক্সেল ফাইল ডাউনলোড বোতাম
                 st.download_button(
                     label="📥 সম্পূর্ণ এক্সেল তালিকা (CSV) ডাউনলোড করুন",
                     data=df_download.to_csv(index=False).encode('utf-8'),
