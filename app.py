@@ -185,7 +185,7 @@ elif choice == "📝 ভর্তি তথ্য ও ফরম":
     
     st.markdown("#### 📩 অনলাইনের সাধারণ প্রাথমিক আবেদন ফরম")
     with st.form("admission_form"):
-        student_name = st.text_input("शिक्षার্থীর পুরো নাম (বাংলায়):")
+        student_name = st.text_input("শিক্ষার্থীর পুরো নাম (বাংলায়):")
         apply_class = st.selectbox("ভর্তির ইচ্ছুক শ্রেণী:", ["প্রাক-প্রাথমিক", "১ম শ্রেণী", "২য় শ্রেণী", "৩য় শ্রেণী", "৪র্থ শ্রেণী", "৫ম শ্রেণী"])
         guardian_name = st.text_input("অভিভাবকের নাম:")
         phone_number = st.text_input("যোগাযোগের জন্য মোবাইল নম্বর:")
@@ -196,7 +196,7 @@ elif choice == "📝 ভর্তি তথ্য ও ফরম":
             if student_name and phone_number:
                 csv_file = "admissions.csv"
                 new_data = pd.DataFrame([{
-                    "शिक्षার্থীর নাম": student_name,
+                    "শিক্ষার্থীর নাম": student_name,
                     "ভর্তির শ্রেণী": apply_class,
                     "অভিভাবকের নাম": guardian_name,
                     "মোবাইল নম্বর": phone_number
