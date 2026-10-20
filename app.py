@@ -177,30 +177,67 @@ elif choice == "🔍 রেজাল্ট ও আইডি":
         else:
             st.error("❌ আইডি পাওয়া যায়নি।")
 
-# ৫. ভর্তি তথ্য ও ফরম (সঠিক বাটন কোডসহ)
-elif choice == "📝 ভর্তি তথ্য ও ফরম":
-    st.subheader("📝 নতুন ছাত্র-ছাত্রী ভর্তি তথ্য ও আবেদন")
+# ==========================================
+# ৫. ভর্তি ফরম সেকশন (এক্সেল ফাইল কানেক্টিভিটি সহ নির্দিষ্ট কোড)
+# ==========================================
+elif choice == "📝 ডিজিটাল ভর্তি ফরম":
+    st.markdown("### 📝 নতুন ছাত্র-ছাত্রী ভর্তি তথ্য ও আবেদন")
     
-    st.markdown("""
-    ### 📢 ভর্তির নিয়মাবলী ও যোগ্যতা:
-    * **প্রাক-প্রাথমিক:** বয়স ৪+ বছর হতে হবে। জন্ম নিবন্ধনের কপি আবশ্যক।
-    * **১ম থেকে ৫ম শ্রেণী:** অন্য স্কুল থেকে আসলে ট্রান্সফার সার্টিফিকেট (TC) এবং পূর্ববর্তী ক্লাসের রিপোর্ট কার্ড লাগবে।
-    """)
-    st.markdown("---")
-    
-    st.subheader("📩 অনলাইনের সাধারণ প্রাথমিক আবেদন ফরম")
+    st.markdown("#### 📩 অনলাইনের সাধারণ প্রাথমিক আবেদন ফরম")
     with st.form("admission_form"):
-        student_name = st.text_input("शिक्षার্থীর পুরো নাম:")
+        student_name = st.text_input("শিক্ষার্থীর পুরো নাম (বাংলায়):")
         apply_class = st.selectbox("ভর্তির ইচ্ছুক শ্রেণী:", ["প্রাক-প্রাথমিক", "১ম শ্রেণী", "২য় শ্রেণী", "৩য় শ্রেণী", "৪র্থ শ্রেণী", "৫ম শ্রেণী"])
         guardian_name = st.text_input("অভিভাবকের নাম:")
         phone_number = st.text_input("যোগাযোগের জন্য মোবাইল নম্বর:")
         
-        submitted = st.form_submit_button("আবেদন জমা দিন")
+        submitted = st.form_submit_button("🚀 আবেদন জমা দিন")
+        
         if submitted:
             if student_name and phone_number:
-                st.success(f"🎉 ধন্যবাদ! {student_name}-এর প্রাথমিক আবেদনটি সফলভাবে সিস্টেমে জমা হয়েছে। আমরা শীঘ্রই {phone_number} নম্বরে যোগাযোগ করব।")
+                # এক্সেল শিট ফাইলের নাম
+                csv_file = "admissions.csv"
+                
+                # নতুন অভিভাবকের পাঠানো ডেটা স্ট্রাকচার
+                new_data = pd.DataFrame([{
+                    "শিক্ষার্থীর নাম": student_name,
+                    "ভর্তির শ্রেণী": apply_class,
+                    "অভিভাবকের নাম": guardian_name,
+                    "মোবাইল নম্বর": phone_number
+                }])
+                
+                # ফাইলটি আগে থেকে থাকলে তার সাথে নতুন ডেটা যোগ হবে, না থাকলে নতুন ফাইল তৈরি হবে
+                if os.path.exists(csv_file):
+                    old_data = pd.read_csv(csv_file)
+                    updated_data = pd.concat([old_data, new_data], ignore_index=True)
+                    updated_data.to_csv(csv_file, index=False)
+                else:
+                    new_data.to_csv(csv_file, index=False)
+                
+                st.balloons()
+                st.success(f"🎉 আবেদন সফল হয়েছে! {student_name}-এর প্রাথমিক তথ্য ডাটাবেজ ফাইলে সংরক্ষিত হয়েছে।")
             else:
-                st.warning("⚠️ দয়া করে শিক্ষার্থীর নাম এবং মোবাইল নম্বর অবশ্যই লিখুন।")
+                st.warning("⚠️ দয়া করে শিক্ষার্থীর নাম এবং মোবাইল নম্বর অবশ্যই সঠিকভাবে পূরণ করুন।")
+
+    # প্রধান শিক্ষকের জন্য ডাটাশিট ডাউনলোড করার বিশেষ প্যানেল
+    st.markdown("---")
+    with st.expander("🔐 প্রধান শিক্ষকের প্যানেল (আবেদন তালিকা ডাউনলোড)"):
+        password = st.text_input("গোপন পাসওয়ার্ড দিন:", type="password")
+        
+        # ডিফল্ট পাসওয়ার্ড 'admin123' দেওয়া হয়েছে, আপনি চাইলে পরিবর্তন করতে পারেন
+        if password == "admin123":
+            if os.path.exists("admissions.csv"):
+                df_download = pd.read_csv("admissions.csv")
+                st.dataframe(df_download)
+                
+                # এক্সেল ফাইল ডাউনলোড বোতাম
+                st.download_button(
+                    label="📥 সম্পূর্ণ এক্সেল তালিকা (CSV) ডাউনলোড করুন",
+                    data=df_download.to_csv(index=False).encode('utf-8'),
+                    file_name="School_Admissions_List.csv",
+                    mime="text/csv"
+                )
+            else:
+                st.info("📂 এখনো কোনো নতুন ভর্তি আবেদন জমা পড়েনি।")
 
 # ৬. ছবি গ্যালারি
 elif choice == "🖼️ ছবি গ্যালারি":
