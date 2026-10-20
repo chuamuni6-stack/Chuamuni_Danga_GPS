@@ -348,7 +348,7 @@ elif choice == "🖼️ ছবি গ্যালারি":
     st.subheader("🖼️ স্কুলের বিভিন্ন অনুষ্ঠান ও খেলাধুলার ছবি")
     
     pic1_path = "school_pic1.jpg"
-    pic2_path = "school_pic2.jpg"
+    
     
     col1, col2 = st.columns(2)
     
