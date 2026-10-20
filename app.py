@@ -360,6 +360,6 @@ elif choice == "🖼️ ছবি গ্যালারি":
             
     with col2:
         if os.path.exists(pic2_path):
-            st.image(pic2_path, caption="মহান বিজয় দিবস উদযাপন", use_column_width=True)
+            st.image(pic2_path, caption="ফ্রি প্যালেস্টাইন", use_column_width=True)
         else:
             st.warning("📷 'school_pic2.jpg' ছবিটি ফোল্ডারে খুঁজে পাওয়া যায়নি।")
