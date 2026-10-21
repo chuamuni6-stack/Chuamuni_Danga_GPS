@@ -40,7 +40,7 @@ elif choice == "📅 দৈনিক ক্লাস রুটিন":
     
     # রেডিও বাটনগুলোকে সেন্টারে আনার জন্য কাস্টম CSS
     st.markdown(
-        """
+    """
         <style>
         div[row-data-focusable="true"] {
             justify-content: center;
@@ -51,6 +51,17 @@ elif choice == "📅 দৈনিক ক্লাস রুটিন":
     )
     
     routine_mode = st.radio("🔍 রুটিন দেখার মাধ্যম নির্বাচন করুন:", ["🏫 শ্রেণীভিত্তিক রুটিন", "👨‍🏫 শিক্ষকভিত্তিক রুটিন"], horizontal=True)
+
+    routine_mode(
+    """
+        <style>
+        div[row-data-focusable="true"] {
+            justify-content: center;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
     st.markdown("---")
     
     if routine_mode == "🏫 শ্রেণীভিত্তিক রুটিন":
