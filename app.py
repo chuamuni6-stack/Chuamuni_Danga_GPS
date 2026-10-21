@@ -8,7 +8,7 @@ st.set_page_config(page_title="২১ চুয়ামনি ডাংগা �
 # অ্যাপের মূল শিরোনাম (স্কুলের নতুন নাম যুক্ত করা হয়েছে)
 st.markdown("<h1 style='text-align: center;'>🏫 ২১ চুয়ামনি ডাংগা সরকারি প্রাথমিক বিদ্যালয়</h1>", unsafe_allow_html=True)
 # ডাবল স্পেস
-st.markdown("<br><br>", unsafe_allow_html=True)
+st.markdown("<br>", unsafe_allow_html=True)
 st.write("<h4 style='text-align: center;'>ডিজিটাল অ্যাপে স্বাগতম! নিচে থেকে আপনার প্রয়োজনীয় অপশনটি বেছে নিন।</h4>", unsafe_allow_html=True)
 st.markdown("---")
 
@@ -38,57 +38,41 @@ elif choice == "📅 দৈনিক ক্লাস রুটিন":
     st.markdown("<h3 style='text-align: center;'>📅 দৈনিক ক্লাস ও শিক্ষক রুটিন (২০২৬)</h3>", unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
     
-    # ২. রেডিও বাটনের পুরো ব্লকটিকে স্ক্রিনের একদম সেন্টারে আনার জন্য আলটিমেট সিএসএস রুল
+    # ২. রেডিও বাটনের ওপরের মেইন লেবেল বা টেক্সটটিকে মাঝখানে বড় আকারে দেখানো
+    st.markdown("<p style='text-align: center; font-size: 18px; font-weight: bold;'>🔍 রুটিন দেখার মাধ্যম নির্বাচন করুন:</p>", unsafe_allow_html=True)
+    
+    # ৩. আসল রেডিও বাটনটিকে স্ক্রিন থেকে লুকিয়ে রাখার জন্য সিএসএস (Hidden)
     st.markdown(
         """
         <style>
-        /* ১. রেডিও বাটনের পুরো কন্টেইনার এবং এর ভেতরের ফর্ম ব্লককে ফ্লেক্স বক্স দিয়ে সেন্টারে আনা */
-        div[data-testid="stRadio"], 
-        div[data-testid="stRadio"] > div,
-        div[data-testid="stRadio"] div[role="radiogroup"] {
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: center !important;
-            justify-content: center !important;
-            text-align: center !important;
-            width: 100% !important;
-            margin: 0 auto !important;
-        }
-        
-        /* ২. বাটনগুলো যেন অনুভূমিকভাবে (Horizontal) একদম মাঝখানে সারিবদ্ধ থাকে */
-        div[data-testid="stRadio"] div[role="radiogroup"] {
-            flex-direction: row !important;
-            gap: 30px !important; /* বাটন দুটির মাঝের ফাঁকা জায়গা */
-        }
-        
-        /* ৩. ওপরের মেইন লেবেল টেক্সটটিকে বড় এবং সেন্ট্রালাইজড করা */
-        div[data-testid="stRadio"] > label p {
-            font-size: 18px !important;
-            font-weight: bold !important;
-            color: #ffffff !important;
-            text-align: center !important;
-            justify-content: center !important;
-            display: flex !important;
-            width: 100% !important;
-        }
-        
-        /* ৪. রেডিও বাটনের ভেতরের অপশনগুলোর লেখা বড়, স্পষ্ট এবং বোল্ড করা */
-        div[data-testid="stRadio"] label p {
-            font-size: 16px !important;
-            font-weight: bold !important;
-            color: #ffffff !important;
+        div[data-testid="stRadio"] {
+            display: none !important;
         }
         </style>
         """,
         unsafe_allow_html=True
     )
     
-    # ৩. মূল রেডিও বাটন কোড
-    routine_mode = st.radio(
-        "🔍 রুটিন দেখার মাধ্যম নির্বাচন করুন:", 
-        ["🏫 শ্রেণীভিত্তিক রুটিন", "👨‍🏫 শিক্ষকভিত্তিক রুটিন"], 
-        horizontal=True
-    )
+    # ৪. কলামের সাহায্যে মাঝখানে দুটি সুন্দর এবং বড় ইন্টারঅ্যাক্টিভ বাটন তৈরি
+    col1, col2, col3, col4 = st.columns([1, 2, 2, 1])
+    
+    # সেশন স্টেট ইনিশিয়ালাইজ করা (ডিফল্ট মান)
+    if "routine_selection" not in st.session_state:
+        st.session_state.routine_selection = "🏫 শ্রেণীভিত্তিক রুটিন"
+        
+    with col2:
+        if st.button("🏫 শ্রেণীভিত্তিক রুটিন", use_container_width=True):
+            st.session_state.routine_selection = "🏫 শ্রেণীভিত্তিক রুটিন"
+            
+    with col3:
+        if st.button("👨‍🏫 শিক্ষকভিত্তিক রুটিন", use_container_width=True):
+            st.session_state.routine_selection = "👨‍🏫 শিক্ষকভিত্তিক রুটিন"
+            
+    # ৫. আপনার কোডের পরবর্তী লজিকগুলো রান করার জন্য আসল ভ্যারিয়েবল সেট
+    routine_mode = st.session_state.routine_selection
+    
+    # মানুষ কোন বাটনটি সিলেক্ট করেছে তা মাঝখানে একটি ছোট নোটিফিকেশনে দেখানো (ঐচ্ছিক)
+    st.markdown(f"<p style='text-align: center; color: #ffaa00; font-weight: bold;'>বর্তমানে নির্বাচিত: {routine_mode}</p>", unsafe_allow_html=True)
     st.markdown("---")
 
     if routine_mode == "🏫 শ্রেণীভিত্তিক রুটিন":
