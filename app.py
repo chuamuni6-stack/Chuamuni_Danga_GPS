@@ -36,7 +36,7 @@ if choice == "📢 নোটিশ বোর্ড":
 elif choice == "📅 দৈনিক ক্লাস রুটিন":
     st.markdown("<h1 style='text-align: center;'>### 📅 দৈনিক ক্লাস ও শিক্ষক রুটিন (২০২৬)</h1>", unsafe_allow_html=True)
     
-    routine_mode = st.radio(<h1 style='text-align: center;'>"🔍 রুটিন দেখার মাধ্যম নির্বাচন করুন:", ["🏫 শ্রেণীভিত্তিক রুটিন", "👨‍🏫 শিক্ষকভিত্তিক রুটিন"], </h1>", unsafe_allow_html=True, horizontal=True)
+    routine_mode = st.radio("🔍 রুটিন দেখার মাধ্যম নির্বাচন করুন:", ["🏫 শ্রেণীভিত্তিক রুটিন", "👨‍🏫 শিক্ষকভিত্তিক রুটিন"], horizontal=True)
     st.markdown("---")
     
     if routine_mode == "🏫 শ্রেণীভিত্তিক রুটিন":
