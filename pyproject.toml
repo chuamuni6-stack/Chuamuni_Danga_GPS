@@ -3,8 +3,8 @@ project_name = "Chuamunidanga School App"
 bundle = "com.chuamunidanga"
 version = "1.0.0"
 url = "https://streamlit.app"
-author = "Mustafizur Rahman"
-author_email = "school@email.com"
+author = "Md Mostafizur Rahman"
+author_email = "hstumostafizur@gmail.com"
 
 [tool.briefcase.app.schoolapp]
 formal_name = "Chuamunidanga School"
