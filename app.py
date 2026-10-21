@@ -38,28 +38,41 @@ elif choice == "📅 দৈনিক ক্লাস রুটিন":
     st.markdown("<h3 style='text-align: center;'>📅 দৈনিক ক্লাস ও শিক্ষক রুটিন (২০২৬)</h3>", unsafe_allow_html=True)
     st.markdown("<br><br>", unsafe_allow_html=True)
     
-    # ২. লেবেল, রেডিও বাটন এবং ফন্ট বড় করার জন্য শক্তিশালী কাস্টম CSS
+    # ২. সব এলিমেন্টকে শতভাগ মাঝখানে আনার জন্য চূড়ান্ত CSS
     st.markdown(
         """
         <style>
-        /* রেডিও বাটনের ওপরের লেবেল বা টেক্সটটিকে মাঝখানে আনা */
+        /* ১. রেডিও বাটনের পুরো ব্লকটিকে সেন্টারে আনা */
+        div[data-testid="stRadio"] {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 100% !important;
+            text-align: center !important;
+        }
+        
+        /* ২. ওপরের লেবেল বা টেক্সটটিকে মাঝখানে আনা */
         div[data-testid="stRadio"] > label {
             display: flex !important;
             justify-content: center !important;
-            text-align: center !important;
+            align-items: center !important;
             width: 100% !important;
             font-size: 16px !important;
+            text-align: center !important;
         }
         
-        /* রেডিও বাটন গ্রুপটিকে (অনুভূমিক বাটনগুলো) স্ক্রিনের মাঝখানে আনা */
-        div[data-testid="stRadio"] > div[role="radiogroup"] {
+        /* ৩. বাটনগুলোর মেইন কন্টেইনারকে সেন্টারে আনা */
+        div[data-testid="stRadio"] div[role="radiogroup"] {
             display: flex !important;
             justify-content: center !important;
-            gap: 20px !important; /* বাটন দুটির মাঝের দূরত্ব */
-            width: 100% !important;
+            align-items: center !important;
+            gap: 24px !important;
+            width: auto !important;
+            margin: 0 auto !important;
         }
 
-        /* বাটনগুলোর ভেতরের টেক্সট ফন্ট বড় এবং স্পষ্ট করা */
+        /* ৪. বাটনগুলোর ভেতরের ফন্ট সাইজ বড় এবং স্পষ্ট করা */
         div[data-testid="stRadio"] label p {
             font-size: 16px !important;
             font-weight: bold !important;
