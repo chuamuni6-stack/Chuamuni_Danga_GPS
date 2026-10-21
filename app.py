@@ -34,24 +34,45 @@ if choice == "📢 নোটিশ বোর্ড":
 # ২. ক্লাস রুটিন সেকশন (সম্পূর্ণ ফিক্সড)
 # ==========================================
 elif choice == "📅 দৈনিক ক্লাস রুটিন":
-    st.markdown("<h3 style='text-align: center;'>### 📅 দৈনিক ক্লাস ও শিক্ষক রুটিন (২০২৬)</h3>", unsafe_allow_html=True)
-    # লেখাগুলোর মাঝে ডাবল স্পেস (লাইন ব্রেক) দেওয়া হলো
+    # ১. প্রধান শিরোনামটিকে মাঝখানে নিয়ে আসা
+    st.markdown("<h3 style='text-align: center;'>📅 দৈনিক ক্লাস ও শিক্ষক রুটিন (২০২৬)</h3>", unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
     
-    # রেডিও বাটনগুলোকে সেন্টারে আনার জন্য কাস্টম CSS
+    # ২. রেডিও বাটনের ওপরের মেইন লেবেল বা টেক্সটটিকে মাঝখানে বড় আকারে দেখানো
+    st.markdown("<p style='text-align: center; font-size: 18px; font-weight: bold;'>🔍 রুটিন দেখার মাধ্যম নির্বাচন করুন:</p>", unsafe_allow_html=True)
+    
+    # ৩. আসল রেডিও বাটনটিকে স্ক্রিন থেকে লুকিয়ে রাখার জন্য সিএসএস (Hidden)
     st.markdown(
-    """
+        """
         <style>
-        div[row-data-focusable="true"] {
-            justify-content: center;
+        div[data-testid="stRadio"] {
+            display: none !important;
         }
         </style>
         """,
         unsafe_allow_html=True
     )
     
-    routine_mode = st.radio("🔍 রুটিন দেখার মাধ্যম নির্বাচন করুন:", ["🏫 শ্রেণীভিত্তিক রুটিন", "👨‍🏫 শিক্ষকভিত্তিক রুটিন"], horizontal=True)
-
+    # ৪. কলামের সাহায্যে মাঝখানে দুটি সুন্দর এবং বড় ইন্টারঅ্যাক্টিভ বাটন তৈরি
+    col1, col2, col3, col4 = st.columns([1, 2, 2, 1])
+    
+    # সেশন স্টেট ইনিশিয়ালাইজ করা (ডিফল্ট মান)
+    if "routine_selection" not in st.session_state:
+        st.session_state.routine_selection = "🏫 শ্রেণীভিত্তিক রুটিন"
+        
+    with col2:
+        if st.button("🏫 শ্রেণীভিত্তিক রুটিন", use_container_width=True):
+            st.session_state.routine_selection = "🏫 শ্রেণীভিত্তিক রুটিন"
+            
+    with col3:
+        if st.button("👨‍🏫 শিক্ষকভিত্তিক রুটিন", use_container_width=True):
+            st.session_state.routine_selection = "👨‍🏫 শিক্ষকভিত্তিক রুটিন"
+            
+    # ৫. আপনার কোডের পরবর্তী লজিকগুলো রান করার জন্য আসল ভ্যারিয়েবল সেট
+    routine_mode = st.session_state.routine_selection
+    
+    # মানুষ কোন বাটনটি সিলেক্ট করেছে তা মাঝখানে একটি ছোট নোটিফিকেশনে দেখানো (ঐচ্ছিক)
+    st.markdown(f"<p style='text-align: center; color: #ffaa00; font-weight: bold;'>বর্তমানে নির্বাচিত: {routine_mode}</p>", unsafe_allow_html=True)
     st.markdown("---")
 
     if routine_mode == "🏫 শ্রেণীভিত্তিক রুটিন":
