@@ -1,1 +1,35 @@
+name: Build Android APK
+on:
+  push:
+    branches: [ main, master ]
 
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11' # এখানে গিটহাব স্বয়ংক্রিয়ভাবে স্টেবল সংস্করণ ব্যবহার করবে
+
+    - name: Install Build Dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y git zip unzip openjdk-17-jdk pkg-packages libffi-dev autoconf automake libtool pkg-config zlib1g-dev libncurses-dev
+        pip install --upgrade pip
+        pip install buildozer cython setuptools wheel
+
+    - name: Build with Buildozer
+      run: |
+        buildozer android debug
+      env:
+        HOME: /home/runner
+
+    - name: Upload APK Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: school-app-apk
+        path: bin/*.apk
