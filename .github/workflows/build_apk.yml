@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04 # একটি স্টেবল ও ফিক্সড উবুন্টু সংস্করণ ব্যবহার করা হলো
+    runs-on: ubuntu-22.04
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -22,15 +22,18 @@ jobs:
         pip install --upgrade pip
         pip install buildozer cython setuptools wheel
 
-    - name: Initialize Buildozer Config if not exists
+    - name: Build and Configure Buildozer Spec
       run: |
-        if [ ! -f buildozer.spec ]; then
-          buildozer init
-        fi
+        # যদি আগে থেকে ফাইল না থাকে তবে একটি ফ্রেশ ডিরেক্টরি স্পেক তৈরি করা
+        buildozer init
+        
+        # স্পেক ফাইলের ভেতরের রিকোয়ারমেন্টস অটো-আপডেট করা (Streamlit এর পরিবর্তে Kivy/WebView সেটআপের জন্য)
+        sed -i 's/requirements = python3,kivy/requirements = python3,kivy,android,pandas,requests/g' buildozer.spec
+        sed -i 's/#android.accept_sdk_license = False/android.accept_sdk_license = True/g' buildozer.spec
 
-    - name: Build with Buildozer (Auto Accept Licenses)
+    - name: Build with Buildozer (Auto Accept)
       run: |
-        # এখানে '--yes' ফ্ল্যাগ যুক্ত করা হয়েছে যেন গিটহাব নিজে থেকেই সব অ্যান্ড্রয়েড লাইসেন্স একসেপ্ট করে নেয়
+        # সরাসরি লাইসেন্স একসেপ্ট সহ ফাইনাল কম্পাইল
         buildozer android debug --yes
       env:
         HOME: /home/runner
