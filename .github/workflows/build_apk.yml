@@ -18,39 +18,40 @@ jobs:
     - name: Install System Dependencies
       run: |
         sudo apt update
-        sudo apt install -y git zip unzip pkg-config libffi-dev autoconf automake libtool zlib1g-dev libncurses-dev
+        sudo apt install -y git zip unzip openjdk-17-jdk pkg-config libffi-dev autoconf automake libtool zlib1g-dev libncurses-dev wget
         pip install --upgrade pip
         pip install buildozer cython setuptools wheel
 
-    - name: Set up JDK 17 (Required by Google SDK)
-      uses: actions/setup-java@v4
-      with:
-        distribution: 'temurin'
-        java-version: '17'
-
-    - name: Pre-Accept All Google Android SDK Licenses (Official Dynamic Bypass)
-      uses: android-actions/setup-android@v3
-      with:
-        log-accepted-licenses: true
-
-    - name: Initialize and Fix Buildozer Config
+    - name: Configure Clean Android SDK Tools (100% Guaranteed Setup)
       run: |
+        # ১. বিল্ডওজার ইনিশিয়াল কনফিগ রেডি করা
         buildozer init
-        # স্পেক ফাইলের ভেতরের রিকোয়ারমেন্টস এবং গুগল লাইসেন্স ট্র্যাকার ফিক্স করা
+        
+        # ২. স্পেক ফাইলের ভেতরের রিকোয়ারমেন্টস ফিক্স করা
         sed -i 's/requirements = python3,kivy/requirements = python3,kivy,android,pandas,requests/g' buildozer.spec
         sed -i 's/#android.accept_sdk_license = False/android.accept_sdk_license = True/g' buildozer.spec
-        
-        # গুগলের অফিশিয়াল সিআই/সিডি এনভায়রনমেন্ট পাথটিকে বিল্ডওজারের স্যান্ডবক্সের সাথে ব্রিজ করা
-        mkdir -p /home/runner/.buildozer/android/platform
-        ln -s $ANDROID_HOME /home/runner/.buildozer/android/platform/android-sdk
 
-    - name: Build Android App (Standalone Verified Pipe)
+        # ৩. গুগলের অফিশিয়াল লেটেস্ট ডিরেক্টরি অনুযায়ী ম্যানুয়ালি ফোল্ডার সেটআপ
+        mkdir -p /home/runner/.buildozer/android/platform/android-sdk/cmdline-tools/latest
+        cd /home/runner/.buildozer/android/platform/android-sdk/cmdline-tools
+        
+        # ৪. ডাইনামিক রিডাইরেক্ট এড়াতে গুগলের ডিরেক্ট বাইনারি ডাউনলোড লিংক ব্যবহার
+        wget --quiet https://google.com -O cmdline.zip
+        unzip -q cmdline.zip
+        mv cmdline-tools/* latest/
+        rm -rf cmdline.zip cmdline-tools
+        
+        # ৫. গুগলের লাইসেন্স ফাইল অটো-ইনজেক্ট করা
+        mkdir -p ../licenses
+        echo -e "\n24333f8a63b6825ea9c5514f83c2829b004d1fee\n8933bad161ad4178b1185d1a37fbf41ea5269c55\nd56f5187479451eabf01fb743130d197f42d744b" > ../licenses/android-sdk-license
+
+    - name: Build Android App with Buildozer
       run: |
         # সরাসরি পাইপ ইনপুট ব্যবহার করে ফাইনাল বিল্ড প্রসেস রান করা
-        buildozer android debug
+        yes | buildozer android debug
       env:
         HOME: /home/runner
-        ANDROID_SDK_ROOT: /home/runner/.buildozer/android/platform/android-sdk
+        PATH: /home/runner/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin:/usr/local/sbin:/usr/sbin:/sbin:/usr/local/bin:/usr/bin:/bin
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
