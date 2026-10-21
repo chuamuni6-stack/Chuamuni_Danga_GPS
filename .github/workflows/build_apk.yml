@@ -22,22 +22,24 @@ jobs:
         pip install --upgrade pip
         pip install buildozer cython setuptools wheel
 
-    - name: Set up Android SDK & Accept All Licenses (Official GitHub Method)
-      uses: android-actions/setup-android@v3
-
-    - name: Initialize and Configure Buildozer Spec
+    - name: Pre-Configure Buildozer Settings (Fix SDK Manager Bug)
       run: |
+        # ১. একটি ফ্রেশ বিল্ডওজার কনফিগ তৈরি করা
         buildozer init
-        # স্পেক ফাইলের প্রয়োজনীয় অ্যান্ড্রয়েড সেটিংস ফিক্স করা
+        
+        # ২. স্পেক ফাইলের প্রয়োজনীয় অ্যান্ড্রয়েড রিকোয়ারমেন্টস ফিক্স করা
         sed -i 's/requirements = python3,kivy/requirements = python3,kivy,android,pandas,requests/g' buildozer.spec
+        
+        # ৩. বিল্ডওজারকে নির্দেশ দেওয়া যেন সে থার্ড-পার্টি টুল ব্যবহার না করে নিজেই লাইসেন্স একসেপ্ট করে
         sed -i 's/#android.accept_sdk_license = False/android.accept_sdk_license = True/g' buildozer.spec
         
-        # গিটহাবের অফিশিয়াল অ্যান্ড্রয়েড পাথটি বিল্ডওজারের হোমে লিংক করে দেওয়া (আলটিমেট ফিক্স)
-        mkdir -p /home/runner/.buildozer/android/platform
-        ln -s $ANDROID_HOME /home/runner/.buildozer/android/platform/android-sdk
+        # ৪. গুগলের নতুন এসডিকে লকিং এড়াতে লাইসেন্স ফাইল সরাসরি প্রি-ইনজেক্ট করা (আলটিমেট হ্যাক)
+        mkdir -p /home/runner/.buildozer/android/platform/android-sdk/licenses
+        echo -e "\n8933bad161ad4178b1185d1a37fbf41ea5269c55\nd56f5187479451eabf01fb743130d197f42d744b\n24333f8a63b6825ea9c5514f83c2829b004d1fee" > /home/runner/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
 
-    - name: Build with Buildozer (Final Execution)
+    - name: Build Android App (Standalone Mode)
       run: |
+        # কোনো নোড জেএস বা এক্সটার্নাল এসডিকে ছাড়াই বিল্ডওজারকে তার নিজস্ব ডিরেক্টরিতে স্বাধীনভাবে রান করানো
         buildozer android debug --yes
       env:
         HOME: /home/runner
