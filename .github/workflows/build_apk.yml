@@ -60,7 +60,7 @@ jobs:
             super.initState();
             _controller = WebViewController()
               ..setJavaScriptMode(JavaScriptMode.unrestricted)
-              ..loadRequest(Uri.parse('https://streamlit.app')); // আপনার মূল অনলাইন লিংকটি এখানে সেট করা
+              ..loadRequest(Uri.parse('https://streamlit.app?embedded=true')); // আপনার মূল অনলাইন লিংকটি এখানে সেট করা
           }
 
           @override
