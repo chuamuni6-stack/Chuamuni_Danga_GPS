@@ -34,7 +34,21 @@ if choice == "📢 নোটিশ বোর্ড":
 # ২. ক্লাস রুটিন সেকশন (সম্পূর্ণ ফিক্সড)
 # ==========================================
 elif choice == "📅 দৈনিক ক্লাস রুটিন":
-    st.markdown("<h1 style='text-align: center;'>### 📅 দৈনিক ক্লাস ও শিক্ষক রুটিন (২০২৬)</h1>", unsafe_allow_html=True)
+    st.markdown("<h3 style='text-align: center;'>### 📅 দৈনিক ক্লাস ও শিক্ষক রুটিন (২০২৬)</h3>", unsafe_allow_html=True)
+    # লেখাগুলোর মাঝে ডাবল স্পেস (লাইন ব্রেক) দেওয়া হলো
+    st.markdown("<br><br>", unsafe_allow_html=True)
+    
+    # রেডিও বাটনগুলোকে সেন্টারে আনার জন্য কাস্টম CSS
+    st.markdown(
+        """
+        <style>
+        div[row-data-focusable="true"] {
+            justify-content: center;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
     
     routine_mode = st.radio("🔍 রুটিন দেখার মাধ্যম নির্বাচন করুন:", ["🏫 শ্রেণীভিত্তিক রুটিন", "👨‍🏫 শিক্ষকভিত্তিক রুটিন"], horizontal=True)
     st.markdown("---")
