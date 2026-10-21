@@ -52,7 +52,7 @@ elif choice == "📅 দৈনিক ক্লাস রুটিন":
     
     routine_mode = st.radio("🔍 রুটিন দেখার মাধ্যম নির্বাচন করুন:", ["🏫 শ্রেণীভিত্তিক রুটিন", "👨‍🏫 শিক্ষকভিত্তিক রুটিন"], horizontal=True)
 
-    routine_mode(
+    routine_mode = st.radio(
     """
         <style>
         div[row-data-focusable="true"] {
