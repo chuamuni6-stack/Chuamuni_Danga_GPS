@@ -22,29 +22,33 @@ jobs:
         pip install --upgrade pip
         pip install buildozer cython setuptools wheel
 
-    - name: Create Base Directory & Pre-Accept Licenses
+    - name: Initialize Buildozer Config
       run: |
-        #১. বিল্ডওজার সচল করার জন্য ফ্রেশ ডিরেক্টরি কনফিগারেশন তৈরি
         buildozer init
+        # স্পেক ফাইলের প্রয়োজনীয় রিকোয়ারমেন্টস ফিক্স করা
+        sed -i 's/requirements = python3,kivy/requirements = python3,kivy,android,pandas,requests/g' buildozer.spec
+
+    - name: Fix Google Modern SDK Layout & Auto-Accept Licenses (2026 Update)
+      run: |
+        # ১. গুগলের নতুন ডিরেক্টরি স্ট্রাকচার অনুযায়ী পাথ আগে থেকেই তৈরি করা
+        mkdir -p /home/runner/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin
+        mkdir -p /home/runner/.buildozer/android/platform/android-sdk/tools/bin
         
-        # ২. গুগলের লাইসেন্স এগ্রিমেন্ট ফাইলটি সার্ভারে আগে থেকেই ইনজেক্ট করে রাখা (যাতে sdkmanager ডাউনলোড অপশন না খোজে)
+        # ২. গুগলের লেটেস্ট ২০২৬ লাইসেন্স এগ্রিমেন্ট কোডগুলো সরাসরি সার্ভার বক্সে ইনজেক্ট করা
         mkdir -p /home/runner/.buildozer/android/platform/android-sdk/licenses
         echo -e "\n8933bad161ad4178b1185d1a37fbf41ea5269c55\nd56f5187479451eabf01fb743130d197f42d744b\n24333f8a63b6825ea9c5514f83c2829b004d1fee" > /home/runner/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
-
-    - name: Modify Buildozer Spec For Modern SDK Layout (Ultimate Hack)
-      run: |
-        # ৩. স্পেক ফাইলের ভেতরের লাইব্রেরি রিকোয়ারমেন্টস ফিক্স করা
-        sed -i 's/requirements = python3,kivy/requirements = python3,kivy,android,pandas,requests/g' buildozer.spec
-        sed -i 's/#android.accept_sdk_license = False/android.accept_sdk_license = True/g' buildozer.spec
         
-        # ৪. বিল্ডওজারকে বাধ্য করা যেন সে পুরোনো 'tools' পাথ বাদ দিয়ে গুগলের লেটেস্ট অফিশিয়াল ডিরেক্টরি ব্যবহার করে
-        # এটি যোগ করার ফলে বিল্ডওজার অভ্যন্তরীণভাবে কোনো এরর ছাড়াই নিজেই সঠিক ফাইল তৈরি করে নেবে
+        # ৩. বিল্ডওজার যেন কনফিউজড না হয়, সেজন্য পুরোনো বিল্ড পাথের সাথে নতুন অফিশিয়াল পাথের একটি ডাইরেক্ট ব্রিজ লিংক (Symlink) তৈরি
+        ln -s /home/runner/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager /home/runner/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager
+        
+        # ৪. বিল্ডওজারকে ডিরেক্ট নির্দেশ দেওয়া যেন সে থার্ড-পার্টি মেকানিজম এড়িয়ে সরাসরি গুগলের কাস্টম পাথটি ব্যবহার করে
         echo "android.sdk_custom_path = /home/runner/.buildozer/android/platform/android-sdk" >> buildozer.spec
+        sed -i 's/#android.accept_sdk_license = False/android.accept_sdk_license = True/g' buildozer.spec
 
-    - name: Build Android App (Standalone Auto Execution)
+    - name: Build Android App (Standalone Secured Mode)
       run: |
-        # সরাসরি পাইপ ইনপুট ব্যবহার করে ফাইনাল বিল্ড প্রসেস রান করা
-        yes | buildozer android debug
+        # সরাসরি লাইসেন্স বাইপাস করে ফাইনাল কম্পাইল প্রসেস সচল করা
+        buildozer android debug --yes
       env:
         HOME: /home/runner
 
