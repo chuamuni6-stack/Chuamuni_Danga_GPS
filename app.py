@@ -350,6 +350,31 @@ elif choice == "📞 শিক্ষকের তালিকা":
         st.write("👤 **রেখা রাণী**")
         st.write("📱 মোবাইল: 01402970562")
     st.markdown("---")
+    # ------------------ ৪. সহকারী শিক্ষক (মোঃ কামরুজ্জামান) ------------------
+    col4_img, col4_txt = st.columns([1, 2])
+    with col4_img:
+        if os.path.exists("teacher3.jpg"):
+            st.image("teacher3.jpg", use_container_width=True)
+        else:
+            st.warning("📷 ছবি নেই")
+    with col4_txt:
+        st.info("👩‍🏫 **সহকারী শিক্ষক**")
+        st.write("👤 **মোঃ কামরুজ্জামান**")
+        st.write("📱 মোবাইল: ---------")
+    st.markdown("---")
+   
+    # ------------------ ৪. সহকারী শিক্ষক (গৌতম চন্দ্র বর্মন) ------------------
+    col4_img, col4_txt = st.columns([1, 2])
+    with col4_img:
+        if os.path.exists("teacher3.jpg"):
+            st.image("teacher3.jpg", use_container_width=True)
+        else:
+            st.warning("📷 ছবি নেই")
+    with col4_txt:
+        st.info("👩‍🏫 **সহকারী শিক্ষক**")
+        st.write("👤 **গৌতম চন্দ্র বর্মন**")
+        st.write("📱 মোবাইল: ---------")
+    st.markdown("---")
 
     # ------------------ ৪. সহকারী শিক্ষক (মো:গোলাম রব্বানী) ------------------
     col4_img, col4_txt = st.columns([1, 2])
@@ -359,7 +384,7 @@ elif choice == "📞 শিক্ষকের তালিকা":
         else:
             st.warning("📷 ছবি নেই")
     with col4_txt:
-        st.info("👩‍🏫 **সহকারী শিক্ষক**")
+        st.info("👩‍🏫 **সহকারী শিক্ষক (সাময়িক বরখাস্ত)**")
         st.write("👤 **মো:গোলাম রব্বানী**")
         st.write("📱 মোবাইল: 01767076256")
     st.markdown("---")
