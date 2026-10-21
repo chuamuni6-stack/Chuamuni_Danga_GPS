@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04 # একটি স্টেবল ও ফিক্সড উবুন্টু সংস্করণ ব্যবহার করা হলো
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -13,18 +13,25 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.11' # এখানে গিটহাব স্বয়ংক্রিয়ভাবে স্টেবল সংস্করণ ব্যবহার করবে
+        python-version: '3.11'
 
     - name: Install Build Dependencies
       run: |
         sudo apt update
-        sudo apt install -y git zip unzip openjdk-17-jdk pkg-packages libffi-dev autoconf automake libtool pkg-config zlib1g-dev libncurses-dev
+        sudo apt install -y git zip unzip openjdk-17-jdk pkg-config libffi-dev autoconf automake libtool zlib1g-dev libncurses-dev
         pip install --upgrade pip
         pip install buildozer cython setuptools wheel
 
-    - name: Build with Buildozer
+    - name: Initialize Buildozer Config if not exists
       run: |
-        buildozer android debug
+        if [ ! -f buildozer.spec ]; then
+          buildozer init
+        fi
+
+    - name: Build with Buildozer (Auto Accept Licenses)
+      run: |
+        # এখানে '--yes' ফ্ল্যাগ যুক্ত করা হয়েছে যেন গিটহাব নিজে থেকেই সব অ্যান্ড্রয়েড লাইসেন্স একসেপ্ট করে নেয়
+        buildozer android debug --yes
       env:
         HOME: /home/runner
 
