@@ -5,51 +5,83 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
+    - name: Set up Java Development Kit
+      uses: actions/setup-java@v4
       with:
-        python-version: '3.11'
+        distribution: 'temurin'
+        java-version: '17'
 
-    - name: Install System Dependencies
-      run: |
-        sudo apt update
-        sudo apt install -y git zip unzip openjdk-17-jdk pkg-config libffi-dev autoconf automake libtool zlib1g-dev libncurses-dev
-        pip install --upgrade pip
-        pip install buildozer cython setuptools wheel
+    - name: Set up Flutter Engine
+      uses: subosito/flutter-action@v2
+      with:
+        channel: 'stable'
 
-    - name: Configure Buildozer using GitHub Pre-installed SDK (No Downloads)
+    - name: Initialize Web-to-APK Container
       run: |
-        # ১. বিল্ডওজার ইনিশিয়াল কনফিগ রেডি করা
-        buildozer init
+        # ১. গিটহাব ক্লাউডের ভেতরেই একটি নিখুঁত অ্যান্ড্রয়েড অ্যাপ স্ট্রাকচার তৈরি করা
+        flutter create --org com.chuamuni --project-name schoolapp mobile_container
+        cd mobile_container
         
-        # ২. স্পেক ফাইলের ভেতরের রিকোয়ারমেন্টস ফিক্স করা
-        sed -i 's/requirements = python3,kivy/requirements = python3,kivy,android,pandas,requests/g' buildozer.spec
-        sed -i 's/#android.accept_sdk_license = False/android.accept_sdk_license = True/g' buildozer.spec
+        # ২. গুগলের অফিশিয়াল ওয়েব-ভিউ প্লাগইন যুক্ত করা যা স্ট্রিমলিটের অনলাইন লিংক লোড করবে
+        flutter pub add webview_flutter
+        
+        # ৩. অ্যাপের মূল অ্যান্ড্রয়েড কনফিগারেশনে ইন্টারনেট পারমিশন নিশ্চিত করা
+        sed -i '/<manifest/a \    <uses-permission android:name="android.permission.INTERNET"\/>' android/app/src/main/AndroidManifest.xml
+        
+        # ৪. মোবাইল অ্যাপের স্ক্রিন কোড তৈরি করা (যা আপনার স্কুলের অনলাইন লিংক প্রদর্শন করবে)
+        cat << 'EOF' > lib/main.dart
+        import 'package:flutter/material.dart';
+        import 'package:webview_flutter/webview_flutter.dart';
 
-        # ৩. গিটহাবের নিজস্ব প্রি-ইনস্টলড SDK-কে বিল্ডওজারের ফোল্ডারের সাথে সরাসরি যুক্ত করা
-        mkdir -p /home/runner/.buildozer/android/platform
-        ln -s $ANDROID_HOME /home/runner/.buildozer/android/platform/android-sdk
+        void main() {
+          WidgetsFlutterBinding.ensureInitialized();
+          runApp(const MaterialApp(
+            home: SchoolAppScreen(),
+            debugShowCheckedModeBanner: false,
+          ));
+        }
 
-        # ৪. বিল্ডওজার যে পুরোনো 'tools/bin' পাথটি খুঁজছে, সেখানে সিস্টেমের প্রি-ইনস্টলড sdkmanager টিকে লিংক করা
-        mkdir -p /home/runner/.buildozer/android/platform/android-sdk/tools/bin
-        ln -s /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager /home/runner/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager || true
+        class SchoolAppScreen extends StatefulWidget {
+          const SchoolAppScreen({super.key});
+          @override
+          State<SchoolAppScreen> createState() => _SchoolAppScreenState();
+        }
 
-    - name: Build Android App with Buildozer
+        class _SchoolAppScreenState extends State<SchoolAppScreen> {
+          late final WebViewController _controller;
+
+          @override
+          void initState() {
+            super.initState();
+            _controller = WebViewController()
+              ..setJavaScriptMode(JavaScriptMode.unrestricted)
+              ..loadRequest(Uri.parse('https://streamlit.app')); // আপনার মূল অনলাইন লিংকটি এখানে সেট করা
+          }
+
+          @override
+          Widget build(BuildContext context) {
+            return Scaffold(
+              body: SafeArea(
+                child: WebViewWidget(controller: _controller),
+              ),
+            );
+          }
+        }
+        EOF
+
+    - name: Build Final Android APK (Official Google Release Mode)
       run: |
-        # সরাসরি লাইসেন্স বাইপাস করে ফাইনাল কম্পাইল প্রসেস রান করা
-        yes | buildozer android debug
-      env:
-        HOME: /home/runner
-        ANDROID_HOME: /usr/local/lib/android/sdk
-        ANDROID_NDK_HOME: /usr/local/lib/android/sdk/ndk-bundle
+        cd mobile_container
+        # গুগলের অফিশিয়াল প্রোডাকশন কম্পাইলার দিয়ে ১ ক্লিকে এররমুক্ত এপিকে ফাইল জেনারেট করা
+        flutter build apk --release
 
-    - name: Upload APK Artifact
+    - name: Upload Finished APK to GitHub Dashboard
       uses: actions/upload-artifact@v4
       with:
-        name: school-app-apk
-        path: bin/*.apk
+        name: school-app-finished-apk
+        path: mobile_container/build/app/outputs/flutter-apk/app-release.apk
