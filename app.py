@@ -34,27 +34,42 @@ if choice == "📢 নোটিশ বোর্ড":
 # ২. ক্লাস রুটিন সেকশন (সম্পূর্ণ ফিক্সড)
 # ==========================================
 elif choice == "📅 দৈনিক ক্লাস রুটিন":
+    # ১. প্রধান শিরোনামটিকে মাঝখানে নিয়ে আসা
     st.markdown("<h3 style='text-align: center;'>📅 দৈনিক ক্লাস ও শিক্ষক রুটিন (২০২৬)</h3>", unsafe_allow_html=True)
     st.markdown("<br><br>", unsafe_allow_html=True)
     
-    # বাটনগুলোকে সেন্টারে আনা এবং ফন্ট বড় করার কাস্টম CSS
+    # ২. লেবেল, রেডিও বাটন এবং ফন্ট বড় করার জন্য শক্তিশালী কাস্টম CSS
     st.markdown(
         """
         <style>
-        /* বাটনগুলোকে স্ক্রিনের মাঝখানে সারিবদ্ধ করা */
-        div[data-testid="stRadio"] > div {
-            justify-content: center;
+        /* রেডিও বাটনের ওপরের লেবেল বা টেক্সটটিকে মাঝখানে আনা */
+        div[data-testid="stRadio"] > label {
+            display: flex !important;
+            justify-content: center !important;
+            text-align: center !important;
+            width: 100% !important;
+            font-size: 16px !important;
         }
-        /* বাটনগুলোর ভেতরের ফন্ট সাইজ বড় করা */
+        
+        /* রেডিও বাটন গ্রুপটিকে (অনুভূমিক বাটনগুলো) স্ক্রিনের মাঝখানে আনা */
+        div[data-testid="stRadio"] > div[role="radiogroup"] {
+            display: flex !important;
+            justify-content: center !important;
+            gap: 20px !important; /* বাটন দুটির মাঝের দূরত্ব */
+            width: 100% !important;
+        }
+
+        /* বাটনগুলোর ভেতরের টেক্সট ফন্ট বড় এবং স্পষ্ট করা */
         div[data-testid="stRadio"] label p {
             font-size: 16px !important;
-            font-weight: bold;
+            font-weight: bold !important;
         }
         </style>
         """,
         unsafe_allow_html=True
     )
     
+    # ৩. মূল রেডিও বাটন কোড
     routine_mode = st.radio("🔍 রুটিন দেখার মাধ্যম নির্বাচন করুন:", ["🏫 শ্রেণীভিত্তিক রুটিন", "👨‍🏫 শিক্ষকভিত্তিক রুটিন"], horizontal=True)
     st.markdown("---")
 
