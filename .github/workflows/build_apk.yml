@@ -18,12 +18,12 @@ jobs:
     - name: Install System Dependencies & Google Android SDK Manager
       run: |
         sudo apt update
-        # উবুন্টুর অফিশিয়াল নিরাপদ চ্যানেল থেকে সরাসরি sdkmanager এবং android-sdk প্রি-ইনস্টল করা (গুগলের ব্লক এড়ানোর আলটিমেট হ্যাক)
+        # উবুন্টুর অফিশিয়াল নিরাপদ চ্যানেল থেকে সরাসরি sdkmanager এবং android-sdk প্রি-ইনস্টল করা
         sudo apt install -y git zip unzip openjdk-17-jdk pkg-config libffi-dev autoconf automake libtool zlib1g-dev libncurses-dev wget sdkmanager android-sdk
         pip install --upgrade pip
         pip install buildozer cython setuptools wheel
 
-    - name: Fix Google Modern Directory Bridge & Pre-Accept Licenses
+    - name: Fix Google Modern Directory Bridge & Pre-Accept Licenses (Permission Unlocked)
       run: |
         # ১. বিল্ডওজার সচল করার জন্য ফ্রেশ ডিরেক্টরি তৈরি
         buildozer init
@@ -32,15 +32,18 @@ jobs:
         sed -i 's/requirements = python3,kivy/requirements = python3,kivy,android,pandas,requests/g' buildozer.spec
         sed -i 's/#android.accept_sdk_license = False/android.accept_sdk_license = True/g' buildozer.spec
         
-        # ৩. উবুন্টুর প্রি-ইনস্টলড অফিশিয়াল সিকিউর SDK-কে বিল্ডওজারের ফোল্ডারের সাথে ব্রিজ করা
-        mkdir -p /home/runner/.buildozer/android/platform
-        ln -s /usr/lib/android-sdk /home/runner/.buildozer/android/platform/android-sdk
+        # ৩. উবুন্টুর প্রি-ইনস্টলড অফিশিয়াল SDK-কে কপি করে ইউজার ডিরেক্টরিতে আনা (পারমিশন লক এড়ানোর বেস্ট মেথড)
+        mkdir -p /home/runner/.buildozer/android/platform/android-sdk
+        sudo cp -r /usr/lib/android-sdk/* /home/runner/.buildozer/android/platform/android-sdk/ || true
         
-        # ৪. বিল্ডওজার যে পুরোনো 'tools/bin' পাথটি খুঁজছে, সেখানে সিস্টেমের আসল sdkmanager টিকে লিংক (Symlink) করে দেওয়া
+        # ৪. রুট লকিং দূর করতে পুরো ফোল্ডারের ওপর ইউজারকে রাইট পারমিশন (Read/Write) দেওয়া
+        sudo chmod -R 777 /home/runner/.buildozer/android/platform/android-sdk
+        
+        # ৫. বিল্ডওজার যে পুরোনো 'tools/bin' পাথটি খুঁজছে, সেখানে সিস্টেমের আসল sdkmanager টিকে লিংক (Symlink) করে দেওয়া
         mkdir -p /home/runner/.buildozer/android/platform/android-sdk/tools/bin
         ln -s /usr/bin/sdkmanager /home/runner/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager
         
-        # ৫. গুগলের লাইসেন্স কি ডিরেক্টরি ইনজেক্ট করা
+        # ৬. গুগলের লাইসেন্স কি ডিরেক্টরি ইনজেক্ট করা
         mkdir -p /home/runner/.buildozer/android/platform/android-sdk/licenses
         echo -e "\n8933bad161ad4178b1185d1a37fbf41ea5269c55\nd56f5187479451eabf01fb743130d197f42d744b\n24333f8a63b6825ea9c5514f83c2829b004d1fee" > /home/runner/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
 
