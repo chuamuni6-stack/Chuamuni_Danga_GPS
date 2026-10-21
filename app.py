@@ -413,7 +413,7 @@ elif choice == "📞 শিক্ষকের তালিকা":
     col4_img, col4_txt = st.columns([1, 2])
     with col4_img:
         if os.path.exists("teacher5.jpg"):
-            st.image("teacher4.jpg", use_container_width=True)
+            st.image("teacher5.jpg", use_container_width=True)
         else:
             st.warning("📷 ছবি নেই")
     with col4_txt:
