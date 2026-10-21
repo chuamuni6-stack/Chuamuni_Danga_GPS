@@ -7,7 +7,7 @@ st.set_page_config(page_title="২১ চুয়ামনি ডাংগা �
 
 # অ্যাপের মূল শিরোনাম (স্কুলের নতুন নাম যুক্ত করা হয়েছে)
 st.markdown("<h1 style='text-align: center;'>🏫 ২১ চুয়ামনি ডাংগা সরকারি প্রাথমিক বিদ্যালয়</h1>", unsafe_allow_html=True)
-st.write("ডিজিটাল অ্যাপে স্বাগতম! নিচে থেকে আপনার প্রয়োজনীয় অপশনটি বেছে নিন।")
+st.write("<h1 style='text-align: center;'>ডিজিটাল অ্যাপে স্বাগতম! নিচে থেকে আপনার প্রয়োজনীয় অপশনটি বেছে নিন।</h1>", unsafe_allow_html=True)
 st.markdown("---")
 
 # মেনু নির্বাচন
