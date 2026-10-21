@@ -34,16 +34,21 @@ if choice == "📢 নোটিশ বোর্ড":
 # ২. ক্লাস রুটিন সেকশন (সম্পূর্ণ ফিক্সড)
 # ==========================================
 elif choice == "📅 দৈনিক ক্লাস রুটিন":
-    st.markdown("<h3 style='text-align: center;'>### 📅 দৈনিক ক্লাস ও শিক্ষক রুটিন (২০২৬)</h3>", unsafe_allow_html=True)
-    # লেখাগুলোর মাঝে ডাবল স্পেস (লাইন ব্রেক) দেওয়া হলো
+    st.markdown("<h3 style='text-align: center;'>📅 দৈনিক ক্লাস ও শিক্ষক রুটিন (২০২৬)</h3>", unsafe_allow_html=True)
     st.markdown("<br><br>", unsafe_allow_html=True)
     
-    # রেডিও বাটনগুলোকে সেন্টারে আনার জন্য কাস্টম CSS
+    # বাটনগুলোকে সেন্টারে আনা এবং ফন্ট বড় করার কাস্টম CSS
     st.markdown(
-    """
+        """
         <style>
-        div[row-data-focusable="true"] {
+        /* বাটনগুলোকে স্ক্রিনের মাঝখানে সারিবদ্ধ করা */
+        div[data-testid="stRadio"] > div {
             justify-content: center;
+        }
+        /* বাটনগুলোর ভেতরের ফন্ট সাইজ বড় করা */
+        div[data-testid="stRadio"] label p {
+            font-size: 16px !important;
+            font-weight: bold;
         }
         </style>
         """,
@@ -51,18 +56,8 @@ elif choice == "📅 দৈনিক ক্লাস রুটিন":
     )
     
     routine_mode = st.radio("🔍 রুটিন দেখার মাধ্যম নির্বাচন করুন:", ["🏫 শ্রেণীভিত্তিক রুটিন", "👨‍🏫 শিক্ষকভিত্তিক রুটিন"], horizontal=True)
-
-    routine_mode = st.radio(
-    """
-        <style>
-        div[row-data-focusable="true"] {
-            justify-content: center;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
     st.markdown("---")
+
     
     if routine_mode == "🏫 শ্রেণীভিত্তিক রুটিন":
         classes = ["প্রাক-প্রাথমিক", "১ম শ্রেণী", "২য় শ্রেণী", "৩য় শ্রেণী", "৪র্থ শ্রেণী", "৫ম শ্রেণী"]
