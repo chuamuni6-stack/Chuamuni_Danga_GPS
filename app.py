@@ -630,39 +630,40 @@ elif choice == "📝 ভর্তি তথ্য ও ফরম":
             else:
                 st.info("📂 এখনো কোনো নতুন ভর্তি আবেদন জমা পড়েনি।")
 
-# ৭. ছবি গ্যালারি
+# ৭. ছবি গ্যালারি (ইনডেন্টেশন ফিক্সড করা হয়েছে)
 elif choice == "🖼️ ছবি গ্যালারি":
     st.subheader("🖼️ স্কুলের বিভিন্ন অনুষ্ঠান ও খেলাধুলার ছবি")
     
-all_pics = [
-    {"path": "school_pic1.jpg", "cap": "ফ্রি প্যালেস্টাইন"},
-    {"path": "school_pic2.jpg", "cap": "ফ্রি প্যালেস্টাইন"},
-    {"path": "school_pic5.jpg", "cap": "Chobi 1"},
-    {"path": "school_pic6.jpg", "cap": "Chobi 2"},
-    {"path": "school_pic7.jpg", "cap": "Chobi 3"},
-    {"path": "school_pic8.jpg", "cap": "Chobi 4"},
-    {"path": "school_pic9.jpg", "cap": "Chobi 1"},
-    {"path": "school_pic10.jpg", "cap": "Chobi 2"},
-    {"path": "school_pic11.jpg", "cap": "Chobi 3"},
-    {"path": "school_pic12.jpg", "cap": "Chobi 4"},    
-    {"path": "school_pic13.jpg", "cap": "Chobi 1"},
-    {"path": "school_pic14.jpg", "cap": "Chobi 2"},
-    {"path": "school_pic15.jpg", "cap": "Chobi 3"},
-    {"path": "school_pic16.jpg", "cap": "Chobi 4"}
-]
+    # সব ছবির লিস্টটি এখন 'elif' এর ভেতরে ৪ স্পেস ডানে থাকবে
+    all_pics = [
+        {"path": "school_pic1.jpg", "cap": "ফ্রি প্যালেস্টাইন"},
+        {"path": "school_pic2.jpg", "cap": "ফ্রি প্যালেস্টাইন"},
+        {"path": "school_pic5.jpg", "cap": "Chobi 1"},
+        {"path": "school_pic6.jpg", "cap": "Chobi 2"},
+        {"path": "school_pic7.jpg", "cap": "Chobi 3"},
+        {"path": "school_pic8.jpg", "cap": "Chobi 4"},
+        {"path": "school_pic9.jpg", "cap": "Chobi 1"},
+        {"path": "school_pic10.jpg", "cap": "Chobi 2"},
+        {"path": "school_pic11.jpg", "cap": "Chobi 3"},
+        {"path": "school_pic12.jpg", "cap": "Chobi 4"},    
+        {"path": "school_pic13.jpg", "cap": "Chobi 1"},
+        {"path": "school_pic14.jpg", "cap": "Chobi 2"},
+        {"path": "school_pic15.jpg", "cap": "Chobi 3"},
+        {"path": "school_pic16.jpg", "cap": "Chobi 4"}
+    ]
 
-# লুপ চালিয়ে ২টি কলামের গ্রিড তৈরি
-for i in range(0, len(all_pics), 2):
-    # প্রতিবার লুপ ঘোরার সময় নতুন একটি রো (২টি কলাম) তৈরি হবে
-    col1, col2 = st.columns(2)
+    # লুপ চালিয়ে ২টি কলামের গ্রিড তৈরি
+    for i in range(0, len(all_pics), 2):
+        # প্রতিবার লুপ ঘোরার সময় নতুন একটি রো (২টি কলাম) তৈরি হবে
+        col1, col2 = st.columns(2)
 
-    # ১ম কলামে ছবি বসানো
-    with col1:
-        pic = all_pics[i]
-        st.image(pic["path"], caption=pic["cap"], use_column_width=True)
-
-    # ২য় কলামে ছবি বসানো (যদি পরবর্তী ছবি থাকে)
-    if i + 1 < len(all_pics):
-        with col2:
-            pic = all_pics[i + 1]
+        # ১ম কলামে ছবি বসানো
+        with col1:
+            pic = all_pics[i]
             st.image(pic["path"], caption=pic["cap"], use_column_width=True)
+
+        # ২য় কলামে ছবি বসানো (যদি পরবর্তী ছবি থাকে)
+        if i + 1 < len(all_pics):
+            with col2:
+                pic = all_pics[i + 1]
+                st.image(pic["path"], caption=pic["cap"], use_column_width=True)
