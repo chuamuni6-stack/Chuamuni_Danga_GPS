@@ -25,9 +25,21 @@ menu = [
 choice = st.selectbox("মেনু নির্বাচন করুন", menu)
 st.markdown("---")
 
-# ১. নোটিশ বোর্ড অংশ
 if choice == "📢 নোটিশ বোর্ড":
     st.subheader("📢 সর্বশেষ নোটিশ সমূহ")
+    
+    # 🚨 ব্রেকিং নিউজ সেকশন (নোটিশ ১ এর ঠিক উপরে যোগ করা হলো)
+    # direction="right" দেওয়ার কারণে লেখাটি বাম থেকে ডানে (Left to Right) যাবে।
+    breaking_news_html = """
+    <div style="background-color: #ff4b4b; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+        <marquee direction="right" scrollamount="6" style="color: white; font-weight: bold; font-size: 16px;">
+            🚨 ব্রেকিং নিউজ: ২৬ অক্টোবর ২০২৬ তারিখ থেকে সকল ক্লাস নিয়মিত সময়ে অনুষ্ঠিত হবে! 🚨 নতুন শিক্ষাক্রমের মূল্যায়ন নির্দেশিকা প্রকাশিত হয়েছে! 
+        </marquee>
+    </div>
+    """
+    st.markdown(breaking_news_html, unsafe_allow_html=True)
+    
+    # আপনার আগের নোটিশ সমূহ
     st.info("📌 **নোটিশ ১:** ১৬/১০/২০২৬ (শুক্রবার) থেকে ২৫/১০/২০২৬ (রবিবার)পর্যন্ত স্কুল বন্ধ থাকিবে। স্কুল ২৬/১০/২০২৬ (সোমবার) থেকে শুরু হবে।")
     st.info("📌 **নোটিশ ২:** প্রাথমিক বৃত্তি পরীক্ষা অনুষ্ঠিত হবে আগামী ২০,২১,২২, ও ২৩ ডিসেম্বর")
     st.info("📌 **নোটিশ ৩:** ২৬/১০/২০২৬ তারিখে নতুন যোগদান করবেন দুইজন শিক্ষক। ১। কামরুজ্জামান ২। গৌতম চন্দ্র ")
