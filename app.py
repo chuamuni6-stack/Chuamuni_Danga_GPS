@@ -337,14 +337,29 @@ elif choice == "🏫 এক নজরে স্কুল":
     import pandas as pd
     df_leaves = pd.DataFrame(leaves_data)
     st.table(df_leaves) # সুন্দর টেবিল আকারে দেখাবে
+    
+    st.markdown("---")
 
-        # কাস্টম রানিং মাস সাইকেল নির্ধারণ (চলতি মাসের ১১ তারিখ থেকে পরবর্তী মাসের ১০ তারিখ)
+        # ৩. শিক্ষকদের বার্ষিক ও মাসিক ছুটির পরিসংখ্যান ও ক্যাটাগরিভিত্তিক যোগফল
+    st.markdown("#### 📊 শিক্ষকদের ছুটির মাসিক ও বার্ষিক প্রতিবেদন")
+    
+    # স্কুলের মূল ছুটির রেকর্ড ডাটাসেট (স্কুলের তথ্য অনুযায়ী এখানে ছুটির দিনগুলো সাজানো হয়েছে)
+    attendance_data = {
+        "Corporate_Name": ["মো: মোস্তাফিজুর রহমান", "মো: মোস্তাফিজুর রহমান", "মোসাম্মৎ রেহানা পারভীন", "মো: মোস্তাফিজুর রহমান"],
+        "Leave_Type": ["नৈমিত্তিক ছুটি (CL)", "চিকিৎসা জনিত ছুটি", "ট্রেনিং (Training)", "নৈমিত্তিক ছুটি (CL)"],
+        "Duration":,
+        "Date": ["2026-10-15", "2026-08-20", "2026-10-05", "2026-10-25"]
+    }
+    
+    df_all_leaves = pd.DataFrame(attendance_data)
+    df_all_leaves["Date"] = pd.to_datetime(df_all_leaves["Date"])
+    
+    # রানিং মাস সাইকেল নির্ধারণ (চলতি মাসের ১১ তারিখ থেকে আগামী মাসের ১০ তারিখ)
     import datetime
     today = datetime.date.today()
     
     if today.day >= 11:
         start_date = datetime.datetime(today.year, today.month, 11)
-        # পরবর্তী মাসের ১০ তারিখ হিসাব করার লজিক
         if today.month == 12:
             end_date = datetime.datetime(today.year + 1, 1, 10)
         else:
@@ -356,49 +371,45 @@ elif choice == "🏫 এক নজরে স্কুল":
             start_date = datetime.datetime(today.year, today.month - 1, 11)
         end_date = datetime.datetime(today.year, today.month, 10)
 
-    # ইন্টারঅ্যাক্টিভ শিক্ষক নির্বাচন ড্রপডাউন (মাঝখানে আনার জন্য কলাম ব্যবহার করা হলো)
-    col_cb1, col_cb2, col_cb3 = st.columns([1, 2, 1])
-    with col_cb2:
-        teacher_list = ["মো: মোস্তাফিজুর রহমান", "মোসাম্মৎ রেহানা পারভীন"] # শিক্ষকদের নামের তালিকা
-        selected_teacher = st.selectbox("👤 শিক্ষকের নাম নির্বাচন করুন:", teacher_list)
+    # শিক্ষক নির্বাচন ড্রপডাউন মেনু
+    teacher_list = ["মো: মোস্তাফিজুর রহমান", "মোসাম্মৎ রেহানা পারভীন"]
+    selected_teacher = st.selectbox("👤 শিক্ষকের নাম নির্বাচন করুন:", teacher_list)
     
-    # নির্বাচিত শিক্ষকের ডাটা ফিল্টার করা
-    df_teacher = df_all_leaves[df_all_leaves["%E0%A6%B6%E0%A6%BF%E0%A6%95%E0%A7%8D%E0%A6%B7%E0%A6%95%E0%A7%8D%E0%A6%85%E0%A6%B0 %E0%A6%A8%E0%A6%BE%E0%A6%AE"] == selected_teacher]
+    # নির্বাচিত শিক্ষকের ডাটা ফিল্টার
+    df_teacher = df_all_leaves[df_all_leaves["Corporate_Name"] == selected_teacher]
     
-    # ক) বার্ষিক মোট ছুটি হিসাব (২০২৬ সালের সব ছুটি যোগফল)
+    # ক) চলতি বছরের মোট কাটানো ছুটি হিসাব
     current_year = today.year
-    df_yearly = df_teacher[df_teacher["ছুটির তারিখ"].dt.year == current_year]
-    total_yearly_leaves = df_yearly["ছুটির দিন সংখ্যা"].sum()
+    df_yearly = df_teacher[df_teacher["Date"].dt.year == current_year]
+    total_yearly_leaves = df_yearly["Duration"].sum()
     
-    # খ) কাস্টম রানিং মাসের (১১ থেকে ১০ তারিখ) ছুটি ফিল্টার ও হিসাব
-    df_monthly = df_teacher[(df_teacher["ছুটির তারিখ"] >= start_date) & (df_teacher["ছুটির তারিখ"] <= end_date)]
+    # খ) কাস্টম রানিং মাসের (১১ থেকে ১০ তারিখ) ছুটি ফিল্টার
+    df_monthly = df_teacher[(df_teacher["Date"] >= start_date) & (df_teacher["Date"] <= end_date)]
     
-    # ক্যাটাগরি অনুযায়ী রানিং মাসের ছুটি আলাদা করা
-    cl_days = df_monthly[df_monthly["ছুটির ধরন"] == "নৈমিত্তিক ছুটি (CL)"]["ছুটির দিন সংখ্যা"].sum()
-    training_days = df_monthly[df_monthly["ছুটির ধরন"] == "ট্রেনিং (Training)"]["ছুটির দিন সংখ্যা"].sum()
-    medical_days = df_monthly[df_monthly["ছুটির ধরন"] == "চিকিৎসা জনিত ছুটি"]["ছুটির দিন সংখ্যা"].sum()
-    total_monthly_leaves = df_monthly["ছুটির দিন সংখ্যা"].sum()
+    # ক্যাটাগরি অনুযায়ী রানিং মাসের আলাদা আলাদা ছুটির দিন যোগফল
+    cl_days = df_monthly[df_monthly["Leave_Type"] == "नৈমিত্তিক ছুটি (CL)"]["Duration"].sum()
+    training_days = df_monthly[df_monthly["Leave_Type"] == "ট্রেনিং (Training)"]["Duration"].sum()
+    medical_days = df_monthly[df_monthly["Leave_Type"] == "চিকিৎসা জনিত ছুটি"]["Duration"].sum()
+    total_monthly_leaves = df_monthly["Duration"].sum()
     
-    # স্ক্রিনে পরিসংখ্যানগুলো সুন্দর মেকানিজমে দেখানো
+    # স্ক্রিনে পরিসংখ্যান প্রদর্শন লেআউট
     st.markdown(f"##### 📌 **{selected_teacher}** এর ছুটির বিবরণী:")
     
-    # মেট্রিক্স লেআউট (পাশাপাশি বক্সে দেখাবে)
     m_col1, m_col2 = st.columns(2)
     with m_col1:
         st.metric(label=f"📅 চলতি বছরে মোট ছুটি ({current_year})", value=f"{total_yearly_leaves} দিন")
     with m_col2:
         st.metric(label=f"🌙 রানিং চক্রে মোট ছুটি ({start_date.strftime('%d/%m')} থেকে {end_date.strftime('%d/%m')})", value=f"{total_monthly_leaves} দিন")
         
-    # রানিং মাসের ক্যাটাগরিভিত্তিক ছুটির বিস্তারিত ব্রেকডাউন টেবিল
-    st.markdown("**📋 রানিং মাসের ছুটির ব্রেকডাউন (১১ তারিখ থেকে ১০ তারিখ):**")
+    # ক্যাটাগরিভিত্তিক ছুটির বিস্তারিত ব্রেকডাউন টেবিল
     breakdown_data = {
         "ছুটির ধরণ (Category)": ["নৈমিত্তিক ছুটি (CL)", "ট্রেনিং (Training)", "চিকিৎসা জনিত ছুটি", "🚨 সর্বমোট (এই চক্রে)"],
-        "কাটানো ছুটি (দিন)": [f"{cl_days} দিন", f"{training_days} day", f"{medical_days} দিন", f"{total_monthly_leaves} দিন"]
+        "কাটানো ছুটি (দিন)": [f"{cl_days} দিন", f"{training_days} দিন", f"{medical_days} দিন", f"{total_monthly_leaves} দিন"]
     }
     st.table(pd.DataFrame(breakdown_data))
     
     st.markdown("---")
-
+    
     # ৩. পাক্ষিক পরীক্ষার তথ্য ও রুটিন
     st.markdown("#### 📝 আসন্ন পাক্ষিক পরীক্ষা ও রুটিন (২০২৬)")
     st.info("ℹ️ আগামী ০৫ নভেম্বর, ২০২৬ খ্রিঃ থেকে ২য় পাক্ষিক মূল্যায়ন পরীক্ষা শুরু হবে। সকল শিক্ষার্থীকে প্রবেশপত্র সংগ্রহ করতে বলা হচ্ছে।")
