@@ -28,37 +28,40 @@ st.markdown("---")
 if choice == "📢 নোটিশ বোর্ড":
     st.subheader("📢 সর্বশেষ নোটিশ সমূহ")
     
-    # 🚨 বামুখী চেইন অ্যানিমেশন (হলুদ ব্যাকগ্রাউন্ড, কালো টেক্সট এবং সাদা বর্ডার)
-    infinite_marquee_html = """
-    <div style="background-color: #ffeb3b; padding: 12px; border: 2px solid white; border-radius: 5px; margin-bottom: 20px; overflow: hidden; white-space: nowrap; position: relative;">
-        
-        <style>
-            @keyframes marquee_left {
-                0% { transform: translateX(100%); }
-                100% { transform: translateX(-100%); }
-            }
-            .marquee-container {
-                display: inline-block;
-                width: 100%;
-            }
-            .marquee-text {
-                display: inline-block;
-                padding-left: 100%;
-                font-weight: bold;
-                font-size: 16px;
-                color: black;
-                animation: marquee_left 15s linear infinite;
-            }
-        </style>
+# ১. প্রথমে পুরো HTML ও CSS কোডটি একটি ভ্যারিয়েবলে রাখুন
+infinite_marquee_html = """
+<div style="background-color: #ffeb3b; padding: 12px; border: 4px solid white; border-radius: 5px; margin-bottom: 20px; overflow: hidden; white-space: nowrap; position: relative;">
+    
+    <style>
+        @keyframes marquee_left {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        .marquee-container {
+            display: inline-block;
+            width: 100%;
+        }
+        .marquee-text {
+            display: inline-block;
+            padding-left: 100%;
+            font-weight: bold;
+            font-size: 16px;
+            color: black;
+            animation: marquee_left 15s linear infinite;
+        }
+    </style>
 
-        <div class="marquee-container">
-            <div class="marquee-text">
-                🚨 ব্রেকিং নিউজ: ২৬ অক্টোবর ২০২৬ তারিখ থেকে সকল ক্লাস নিয়মিত সময়ে অনুষ্ঠিত হবে! 🔄 নতুন শিক্ষাক্রমের মূল্যায়ন নির্দেশিকা প্রকাশিত হয়েছে! 🔔 প্রাথমিক বৃত্তি পরীক্ষা আগামী ২০ ডিসেম্বর থেকে শুরু! 🚨
-            </div>
+    <div class="marquee-container">
+        <div class="marquee-text">
+            🚨 ব্রেকিং নিউজ: ২৬ অক্টোবর ২০২৬ তারিখ থেকে সকল ক্লাস নিয়মিত সময়ে অনুষ্ঠিত হবে! 🔄 নতুন শিক্ষাক্রমের মূল্যায়ন নির্দেশিকা প্রকাশিত হয়েছে! 🔔 প্রাথমিক বৃত্তি পরীক্ষা আগামী ২০ ডিসেম্বর থেকে শুরু! 🚨
         </div>
     </div>
-    """
-    st.markdown(infinite_marquee_html, unsafe_allow_html=True)
+</div>
+"""
+
+# ২. 🌟 এই লাইনটি সবচেয়ে গুরুত্বপূর্ণ! 🌟
+# এখানে unsafe_allow_html=True দেওয়ার কারণেই লেখাটি অ্যানিমেশন হয়ে যাবে।
+st.markdown(infinite_marquee_html, unsafe_allow_html=True)
     
     # আপনার আগের নোটিশ সমূহ
     st.info("📌 **নোটিশ ১:** ১৬/১০/২০২৬ (শুক্রবার) থেকে ২৫/১০/২০২৬ (রবিবার)পর্যন্ত স্কুল বন্ধ থাকিবে। স্কুল ২৬/১০/২০২৬ (সোমবার) থেকে শুরু হবে।")
