@@ -15,7 +15,8 @@ st.markdown("---")
 # মেনু নির্বাচন
 menu = [
     "📢 নোটিশ বোর্ড", 
-    "📅 দৈনিক ক্লাস রুটিন", 
+    "📅 দৈনিক ক্লাস রুটিন",
+    "🏫 এক নজরে স্কুল",
     "📞 শিক্ষকের তালিকা", 
     "🔍 রেজাল্ট ও আইডি",
     "📝 ভর্তি তথ্য ও ফরম",
@@ -24,9 +25,21 @@ menu = [
 choice = st.selectbox("মেনু নির্বাচন করুন", menu)
 st.markdown("---")
 
-# ১. নোটিশ বোর্ড অংশ
 if choice == "📢 নোটিশ বোর্ড":
     st.subheader("📢 সর্বশেষ নোটিশ সমূহ")
+    
+    # 🚨 ব্রেকিং নিউজ সেকশন (নোটিশ ১ এর ঠিক উপরে যোগ করা হলো)
+    # direction="right" দেওয়ার কারণে লেখাটি বাম থেকে ডানে (Left to Right) যাবে।
+    breaking_news_html = """
+    <div style="background-color: yellow; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+        <marquee direction="left" scrollamount="6" style="color: black; font-weight: bold; font-size: 16px;">
+            🚨 ব্রেকিং নিউজ: ২৬ অক্টোবর ২০২৬ তারিখ থেকে সকল ক্লাস নিয়মিত সময়ে অনুষ্ঠিত হবে! 🚨 ২৬/১০/২০২৬ তারিখে নতুন যোগদান করবেন দুইজন শিক্ষক। ১। কামরুজ্জামান ২। গৌতম চন্দ্র 
+        </marquee>
+    </div>
+    """
+    st.markdown(breaking_news_html, unsafe_allow_html=True)
+    
+    # আপনার আগের নোটিশ সমূহ
     st.info("📌 **নোটিশ ১:** ১৬/১০/২০২৬ (শুক্রবার) থেকে ২৫/১০/২০২৬ (রবিবার)পর্যন্ত স্কুল বন্ধ থাকিবে। স্কুল ২৬/১০/২০২৬ (সোমবার) থেকে শুরু হবে।")
     st.info("📌 **নোটিশ ২:** প্রাথমিক বৃত্তি পরীক্ষা অনুষ্ঠিত হবে আগামী ২০,২১,২২, ও ২৩ ডিসেম্বর")
     st.info("📌 **নোটিশ ৩:** ২৬/১০/২০২৬ তারিখে নতুন যোগদান করবেন দুইজন শিক্ষক। ১। কামরুজ্জামান ২। গৌতম চন্দ্র ")
@@ -306,7 +319,141 @@ elif choice == "📅 দৈনিক ক্লাস রুটিন":
             df.index = df.index + 1  # ইন্ডেক্স ১ থেকে শুরু করার জন্য
             st.dataframe(df, use_container_width=True)  # hide_index বাদ দেওয়া হয়েছে
 
-# ৩. যোগাযোগের তালিকা অংশ (আপনার স্কুলের ৪ জন শিক্ষকের আসল তথ্য ও ছবিসহ)
+# ৩. এক নজরে স্কুল এখান থেকে
+elif choice == "🏫 এক নজরে স্কুল":
+    # প্রধান শিরোনাম মাঝখানে নিয়ে আসা
+    st.markdown("<h3 style='text-align: center;'>🏫 এক নজরে বিদ্যালয়টি</h3>", unsafe_allow_html=True)
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # ১. স্কুলের মূল পরিসংখ্যান (Metrics) পাশাপাশি সুন্দর বক্সে দেখানোর জন্য ৩টি কলাম
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.metric(label="📊 মোট ছাত্র-ছাত্রী", value="৬৯ জন")
+    with col2:
+        st.metric(label="👨‍🏫 মোট শিক্ষক-শিক্ষিকা", value="৬ জন")
+    with col3:
+        st.metric(label="🚪 বর্তমান কার্যদিবস", value="রবি - বৃহস্পতি")
+    
+    st.markdown("---")
+
+    # ২. শিক্ষকদের ছুটির তথ্য (Live Status)
+    st.markdown("#### 📅 আজকে শিক্ষকদের ছুটির তালিকা")
+    # এখানে স্কুলের তথ্য অনুযায়ী নাম পরিবর্তন করে নিতে পারবেন
+    leaves_data = {
+        "শিক্ষকের নাম": ["-----", "-----"],
+        "পদবী": ["-----", "-----"],
+        "ছুটির ধরন": ["-----", "-----"],
+        "তারিখ": ["-----", "-----"],
+        "স্থিতি": ["-----", "-----"]
+    }
+    import pandas as pd
+    df_leaves = pd.DataFrame(leaves_data)
+    st.table(df_leaves) # সুন্দর টেবিল আকারে দেখাবে
+    
+    st.markdown("---")
+
+    # ৩. শিক্ষকদের বার্ষিক ও মাসিক ছুটির পরিসংখ্যান ও ক্যাটাগরিভিত্তিক যোগফল
+    st.markdown("#### 📊 শিক্ষকদের ছুটির মাসিক ও বার্ষিক প্রতিবেদন")
+    
+    # স্কুলের মূল ছুটির রেকর্ড ডাটাসেট (Duration লাইনে ছুটির দিন সংখ্যা [২, ৫, ১০, ৩] ফিক্স করা হয়েছে)
+    attendance_data = {
+        "Corporate_Name": ["মো: মোস্তাফিজুর রহমান", "সন্ধ্যা সরকার", "মোঃ কামরুজ্জামান", "গৌতম সি.বি.", "মো: মোস্তাফিজুর রহমান"],
+        "Leave_Type": ["নৈমিত্তিক ছুটি (CL)", "চিকিৎসা জনিত ছুটি", "ট্রেনিং (Training)", "নৈমিত্তিক ছুটি (CL)", "চিকিৎসা জনিত ছুটি"],
+        "Duration": [4, 3, 2, 6, 1],
+        "Date": ["2026-06-15", "2026-08-20", "2026-10-05", "2026-10-25", "2026-10-25"]
+    }
+    
+    df_all_leaves = pd.DataFrame(attendance_data)
+    df_all_leaves["Date"] = pd.to_datetime(df_all_leaves["Date"])
+    
+    # রানিং মাস সাইকেল নির্ধারণ (চলতি মাসের ১১ তারিখ থেকে আগামী মাসের ১০ তারিখ)
+    import datetime
+    today = datetime.date.today()
+    
+    if today.day >= 11:
+        start_date = datetime.datetime(today.year, today.month, 11)
+        if today.month == 12:
+            end_date = datetime.datetime(today.year + 1, 1, 10)
+        else:
+            end_date = datetime.datetime(today.year, today.month + 1, 10)
+    else:
+        if today.month == 1:
+            start_date = datetime.datetime(today.year - 1, 12, 11)
+        else:
+            start_date = datetime.datetime(today.year, today.month - 1, 11)
+        end_date = datetime.datetime(today.year, today.month, 10)
+
+    # শিক্ষক নির্বাচন ড্রপডাউন মেনু
+    teacher_list = ["মো: মোস্তাফিজুর রহমান", "সন্ধ্যা সরকার", "মোঃ কামরুজ্জামান", "গৌতম সি.বি."]
+    selected_teacher = st.selectbox("👤 শিক্ষকের নাম নির্বাচন করুন:", teacher_list)
+    
+    # নির্বাচিত শিক্ষকের ডাটা ফিল্টার
+    df_teacher = df_all_leaves[df_all_leaves["Corporate_Name"] == selected_teacher]
+    
+    # ক) চলতি বছরের মোট কাটানো ছুটি হিসাব
+    current_year = today.year
+    df_yearly = df_teacher[df_teacher["Date"].dt.year == current_year]
+    total_yearly_leaves = df_yearly["Duration"].sum()
+    
+    # খ) কাস্টম রানিং মাসের (১১ থেকে ১০ তারিখ) ছুটি ফিল্টার
+    df_monthly = df_teacher[(df_teacher["Date"] >= start_date) & (df_teacher["Date"] <= end_date)]
+    
+    # --- তারিখ জোড়া লাগানোর কাস্টম ফাংশন ---
+    def get_leave_dates(leave_type_name):
+        df_filtered = df_monthly[df_monthly["Leave_Type"] == leave_type_name]
+        if not df_filtered.empty:
+            return ", ".join(df_filtered["Date"].dt.strftime('%Y-%m-%d').tolist())
+        return "নেই"
+
+    # ক্যাটাগরি অনুযায়ী রানিং মাসের আলাদা আলাদা ছুটির দিন যোগফল
+    cl_days = df_monthly[df_monthly["Leave_Type"] == "নৈমিত্তিক ছুটি (CL)"]["Duration"].sum()
+    training_days = df_monthly[df_monthly["Leave_Type"] == "ট্রেনিং (Training)"]["Duration"].sum()
+    medical_days = df_monthly[df_monthly["Leave_Type"] == "চিকিৎসা জনিত ছুটি"]["Duration"].sum()
+    total_monthly_leaves = df_monthly["Duration"].sum()
+    
+    # প্রতিটি ছুটির ক্যাটাগরির জন্য তারিখের তালিকা তৈরি
+    cl_dates = get_leave_dates("নৈমিত্তিক ছুটি (CL)")
+    training_dates = get_leave_dates("ট্রেনিং (Training)")
+    medical_dates = get_leave_dates("চিকিৎসা জনিত ছুটি")
+    
+    if not df_monthly.empty:
+        all_monthly_dates = ", ".join(df_monthly["Date"].dt.strftime('%Y-%m-%d').tolist())
+    else:
+        all_monthly_dates = "নেই"
+
+    # 🌟 নতুন সংযোজন: স্ক্রিনে বার্ষিক ও মাসিক ছুটির পরিসংখ্যান কার্ড প্রদর্শন 🌟
+    st.markdown(f"##### 📌 **{selected_teacher}** এর ছুটির বিবরণী:")
+    
+    m_col1, m_col2 = st.columns(2)
+    with m_col1:
+        st.metric(label=f"📅 চলতি বছরে মোট ছুটি ({current_year})", value=f"{total_yearly_leaves} দিন")
+    with m_col2:
+        st.metric(label=f"🌙 রানিং চক্রে মোট ছুটি ({start_date.strftime('%d/%m')} থেকে {end_date.strftime('%d/%m')})", value=f"{total_monthly_leaves} দিন")
+        
+    # ক্যাটাগরিভিত্তিক ছুটির বিস্তারিত ব্রেকডাউন টেবিল
+    breakdown_data = {
+        "ছুটির ধরণ (Category)": ["নৈমিত্তিক ছুটি (CL)", "ট্রেনিং (Training)", "চিকিৎসা জনিত ছুটি", "🚨 সর্বমোট (এই মাসে)"],
+        "কাটানো ছুটি (দিন)": [f"{cl_days} দিন", f"{training_days} দিন", f"{medical_days} দিন", f"{total_monthly_leaves} দিন"],
+        "ছুটির তারিখ (Date)": [cl_dates, training_dates, medical_dates, all_monthly_dates]
+    }
+    st.table(pd.DataFrame(breakdown_data))
+    
+    st.markdown("---")
+    
+    # ৩. পাক্ষিক পরীক্ষার তথ্য ও রুটিন
+    st.markdown("#### 📝 আসন্ন পাক্ষিক পরীক্ষা ও রুটিন (২০২৬)")
+    st.info("ℹ️ আগামী ০৫ নভেম্বর, ২০২৬ খ্রিঃ থেকে ২য় পাক্ষিক মূল্যায়ন পরীক্ষা শুরু হবে। সকল শিক্ষার্থীকে প্রবেশপত্র সংগ্রহ করতে বলা হচ্ছে।")
+    
+    # পরীক্ষার রুটিন ডাটাফ্রেম
+    exam_data = {
+        "তারিখ ও বার": ["০৫/১১/২০২৬ (বৃহস্পতি)", "০৮/১১/২০২৬ (রবি)", "০৯/১১/২০২৬ (সোম)", "১০/১১/২০২৬ (মঙ্গল)"],
+        "১ম শিফট (সকাল ১০:০০)": ["বাংলা (১ম - ৫ম)", "ইংরেজি (১ম - ৫ম)", "গণিত (১ম - ৫ম)", "বাংলাদেশ ও বিশ্বপরিচয়"],
+        "২য় শিফট (দুপুর ০১:৩০)": ["ধর্ম শিক্ষা (৩য় - ৫ম)", "বিজ্ঞান (৩য় - ৫ম)", "শিল্প ও সংস্কৃতি (১ম-৫ম)", "ডিজিটাল প্রযুক্তি (৪র্থ-৫ম)"]
+    }
+    df_exam = pd.DataFrame(exam_data)
+    st.dataframe(df_exam, use_container_width=True, hide_index=True) # মোবাইল স্ক্রিনের সাথে অটো ফিট হবে
+
+# ৪. যোগাযোগের তালিকা অংশ (আপনার স্কুলের ৪ জন শিক্ষকের আসল তথ্য ও ছবিসহ)
 elif choice == "📞 শিক্ষকের তালিকা":
     st.subheader("📞 শিক্ষকের তালিকা")
     st.markdown("### 👨‍🏫শিক্ষকবৃন্দ")
@@ -353,8 +500,8 @@ elif choice == "📞 শিক্ষকের তালিকা":
     # ------------------ ৪. সহকারী শিক্ষক (মোঃ কামরুজ্জামান) ------------------
     col4_img, col4_txt = st.columns([1, 2])
     with col4_img:
-        if os.path.exists("teacher3.jpg"):
-            st.image("teacher3.jpg", use_container_width=True)
+        if os.path.exists("teacher4.jpg"):
+            st.image("teacher4.jpg", use_container_width=True)
         else:
             st.warning("📷 ছবি নেই")
     with col4_txt:
@@ -363,11 +510,11 @@ elif choice == "📞 শিক্ষকের তালিকা":
         st.write("📱 মোবাইল: ---------")
     st.markdown("---")
    
-    # ------------------ ৪. সহকারী শিক্ষক (গৌতম চন্দ্র বর্মন) ------------------
+    # ------------------ ৫. সহকারী শিক্ষক (গৌতম চন্দ্র বর্মন) ------------------
     col4_img, col4_txt = st.columns([1, 2])
     with col4_img:
-        if os.path.exists("teacher3.jpg"):
-            st.image("teacher3.jpg", use_container_width=True)
+        if os.path.exists("teacher5.jpg"):
+            st.image("teacher5.jpg", use_container_width=True)
         else:
             st.warning("📷 ছবি নেই")
     with col4_txt:
@@ -376,7 +523,7 @@ elif choice == "📞 শিক্ষকের তালিকা":
         st.write("📱 মোবাইল: ---------")
     st.markdown("---")
 
-    # ------------------ ৪. সহকারী শিক্ষক (মো:গোলাম রব্বানী) ------------------
+    # ------------------ ৬. সহকারী শিক্ষক (মো:গোলাম রব্বানী) ------------------
     col4_img, col4_txt = st.columns([1, 2])
     with col4_img:
         if os.path.exists("teacher3.jpg"):
@@ -389,7 +536,7 @@ elif choice == "📞 শিক্ষকের তালিকা":
         st.write("📱 মোবাইল: 01767076256")
     st.markdown("---")
 
-# ৪. রেজাল্ট ও আইডি অংশ
+# ৫. রেজাল্ট ও আইডি অংশ
 elif choice == "🔍 রেজাল্ট ও আইডি":
     st.subheader("🔍 স্টুডেন্ট আইডি ও রেজাল্ট অনুসন্ধান")
     student_id = st.text_input("স্টুডেন্ট আইডি লিখুন (টেস্টের জন্য 501 দিন):", placeholder="যেমন: 501")
@@ -404,7 +551,7 @@ elif choice == "🔍 রেজাল্ট ও আইডি":
             st.error("❌ আইডি পাওয়া যায়নি।")
 
 # ==========================================
-# ৫. ভর্তি ফরম সেকশন (সম্পূর্ণ ফ্রেশ ডাটাবেজ টেবিল লজিকসহ)
+# ৬. ভর্তি ফরম সেকশন (সম্পূর্ণ ফ্রেশ ডাটাবেজ টেবিল লজিকসহ)
 # ==========================================
 elif choice == "📝 ভর্তি তথ্য ও ফরম":
     st.markdown("### 📝 নতুন ছাত্র-ছাত্রী ভর্তি তথ্য ও আবেদন")
@@ -483,7 +630,7 @@ elif choice == "📝 ভর্তি তথ্য ও ফরম":
             else:
                 st.info("📂 এখনো কোনো নতুন ভর্তি আবেদন জমা পড়েনি।")
 
-# ৬. ছবি গ্যালারি
+# ৭. ছবি গ্যালারি
 elif choice == "🖼️ ছবি গ্যালারি":
     st.subheader("🖼️ স্কুলের বিভিন্ন অনুষ্ঠান ও খেলাধুলার ছবি")
     
