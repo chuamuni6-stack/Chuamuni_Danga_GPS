@@ -21,26 +21,28 @@ jobs:
       with:
         channel: 'stable'
 
-    - name: Auto-Accept Android SDK Licenses (Official Google CLI Fix)
+    - name: Auto-Accept Android SDK Licenses
       run: |
-        # গুগলের অফিশিয়াল sdkmanager ব্যবহার করে টার্মিনালের স্ট্যান্ডার্ড পাইপ দিয়ে সব লাইসেন্স অটো-অ্যাকসেপ্ট করা
-        # এটি যোগ করার ফলে 'sdkmanager finished with non-zero exit value 1' এরর চিরতরে দূর হবে
         yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
         yes | $ANDROID_HOME/tools/bin/sdkmanager --licenses || true
 
     - name: Build Standalone Non-Login Container
       run: |
-        # ১. গিটহাব ক্লাউডের ভেতরেই একটি ফ্রেশ অ্যান্ড্রয়েড কন্টেইনার তৈরি করা
+        # ১. ফ্রেশ অ্যান্ড্রয়েড কন্টেইনার তৈরি করা
         flutter create --org com.chuamuni --project-name schoolapp mobile_container
         cd mobile_container
         
-        # ২. গুগলের অফিশিয়াল ইন-অ্যাপ ওয়েব ইঞ্জিন প্লাগইন যুক্ত করা
-        flutter pub add flutter_inappwebview
+        # ২. প্লাগইনের স্টেবল ও লেটেস্ট সংস্করণ সুনির্দিষ্টভাবে যুক্ত করা (যা নতুন প্রোগার্ড রুল সাপোর্ট করে)
+        flutter pub add flutter_inappwebview:6.1.0+5
         
-        # ③. অ্যাপের মূল অ্যান্ড্রয়েড কনফিগারেশনে সম্পূর্ণ সিকিউর পারমিশন ও নেটওয়ার্ক ট্রাস্ট নিশ্চিত করা
+        # ৩. অ্যাপের মূল অ্যান্ড্রয়েড কনফিগারেশনে ইন্টারনেট পারমিশন নিশ্চিত করা
         sed -i '/<manifest/a \    <uses-permission android:name="android.permission.INTERNET"\/>\n    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"\/>' android/app/src/main/AndroidManifest.xml
         
-        # ৪. মোবাইল অ্যাপের মেইন স্ক্রিন কোড তৈরি করা (যা সরাসরি ইন-অ্যাপ ইঞ্জিন দিয়ে আপনার অনলাইন লিংক লোড করবে)
+        # ৪. গুগলের নতুন R8 অপ্টিমাইজার ক্র্যাশ এড়াতে গ্রেডল প্রপার্টিজে প্রোগার্ড লক বাইপাস যুক্ত করা
+        echo "android.enableR8.fullMode=false" >> android/gradle.properties
+        echo "android.defaults.buildfeatures.buildconfig=true" >> android/gradle.properties
+
+        # ৫. মোবাইল অ্যাপের মেইন স্ক্রিন কোড তৈরি করা (লগইন ইন্টারসেপ্টর সহ)
         cat << 'EOF' > lib/main.dart
         import 'package:flutter/material.dart';
         import 'package:flutter_inappwebview/flutter_inappwebview.dart';
