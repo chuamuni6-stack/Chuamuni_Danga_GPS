@@ -402,11 +402,21 @@ elif choice == "🏫 এক নজরে স্কুল":
         st.metric(label=f"🌙 রানিং চক্রে মোট ছুটি ({start_date.strftime('%d/%m')} থেকে {end_date.strftime('%d/%m')})", value=f"{total_monthly_leaves} দিন")
         
     # ক্যাটাগরিভিত্তিক ছুটির বিস্তারিত ব্রেকডাউন টেবিল
-    breakdown_data = {
+        breakdown_data = {
         "ছুটির ধরণ (Category)": ["নৈমিত্তিক ছুটি (CL)", "ট্রেনিং (Training)", "চিকিৎসা জনিত ছুটি", "🚨 সর্বমোট (এই চক্রে)"],
         "কাটানো ছুটি (দিন)": [f"{cl_days} দিন", f"{training_days} দিন", f"{medical_days} দিন", f"{total_monthly_leaves} দিন"]
     }
     st.table(pd.DataFrame(breakdown_data))
+    
+    # ⬇️ ঠিক এই লাইনের নিচে নিচের ৩টি লাইন নতুন যোগ করুন ⬇️
+    st.markdown("##### 📅 এই চক্রে কাটানো ছুটির তারিখ ও বিস্তারিত তালিকা:")
+    
+    # তারিখের ফরম্যাটটি সুন্দর করে দেখানোর জন্য (ঐচ্ছিক কিন্তু সুন্দর দেখাবে)
+    df_monthly_display = df_monthly.copy()
+    df_monthly_display["Date"] = df_monthly_display["Date"].dt.strftime('%Y-%m-%d')
+    
+    # স্ক্রিনে আসল টেবিলটি (তারিখসহ) প্রদর্শন
+    st.dataframe(df_monthly_display[["Leave_Type", "Duration", "Date"]])
     
     st.markdown("---")
     
