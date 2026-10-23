@@ -416,7 +416,7 @@ elif choice == "🏫 এক নজরে স্কুল":
     df_monthly_display["Date"] = df_monthly_display["Date"].dt.strftime('%Y-%m-%d')
     
     # স্ক্রিনে আসল টেবিলটি (তারিখসহ) প্রদর্শন
-    st.dataframe(df_monthly_display[["Leave_Type", "Duration", "Date"]])
+    st.dataframe(df_monthly_display[["ছুটির ধরণ", "সময়কাল", "তারিখ"]], hide_index=True))
     
     st.markdown("---")
     
