@@ -637,8 +637,6 @@ elif choice == "🖼️ ছবি গ্যালারি":
 all_pics = [
     {"path": "school_pic1.jpg", "cap": "ফ্রি প্যালেস্টাইন"},
     {"path": "school_pic2.jpg", "cap": "ফ্রি প্যালেস্টাইন"},
-    {"path": "school_pic3.jpg", "cap": "Chobi 3"},
-    {"path": "school_pic4.jpg", "cap": "Chobi 4"},
     {"path": "school_pic5.jpg", "cap": "Chobi 1"},
     {"path": "school_pic6.jpg", "cap": "Chobi 2"},
     {"path": "school_pic7.jpg", "cap": "Chobi 3"},
