@@ -57,7 +57,6 @@ infinite_marquee_html = """
     </div>
 </div>
 """
-
 # ২. 🌟 এই লাইনটি সবচেয়ে গুরুত্বপূর্ণ! 🌟
 # এখানে unsafe_allow_html=True দেওয়ার কারণেই লেখাটি অ্যানিমেশন হয়ে যাবে।
 st.markdown(infinite_marquee_html, unsafe_allow_html=True)
