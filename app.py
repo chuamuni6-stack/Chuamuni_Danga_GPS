@@ -399,7 +399,7 @@ elif choice == "🏫 এক নজরে স্কুল":
     with m_col1:
         st.metric(label=f"📅 চলতি বছরে মোট ছুটি ({current_year})", value=f"{total_yearly_leaves} দিন")
     with m_col2:
-        st.metric(label=f"🌙 রানিং চক্রে মোট ছুটি ({start_date.strftime('%d/%m')} থেকে {end_date.strftime('%d/%m')})", value=f"{total_monthly_leaves} দিন")
+        st.metric(label=f"🌙 রানিং মাসে মোট ছুটি ({start_date.strftime('%d/%m')} থেকে {end_date.strftime('%d/%m')})", value=f"{total_monthly_leaves} দিন")
         
     # ক্যাটাগরিভিত্তিক ছুটির বিস্তারিত ব্রেকডাউন টেবিল
         breakdown_data = {
@@ -416,7 +416,7 @@ elif choice == "🏫 এক নজরে স্কুল":
     df_monthly_display["Date"] = df_monthly_display["Date"].dt.strftime('%Y-%m-%d')
     
     # স্ক্রিনে আসল টেবিলটি (তারিখসহ) প্রদর্শন
-    st.dataframe(df_monthly_display[["ছুটির ধরণ", "সময়কাল", "তারিখ"]], hide_index=True))
+    st.dataframe(df_monthly_display[["ছুটির ধরণ", "সময়কাল", "তারিখ"]], hide_index=True)
     
     st.markdown("---")
     
