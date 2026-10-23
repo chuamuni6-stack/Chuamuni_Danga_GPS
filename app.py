@@ -28,16 +28,37 @@ st.markdown("---")
 if choice == "📢 নোটিশ বোর্ড":
     st.subheader("📢 সর্বশেষ নোটিশ সমূহ")
     
-    # 🚨 ব্রেকিং নিউজ সেকশন (নোটিশ ১ এর ঠিক উপরে যোগ করা হলো)
-    # direction="right" দেওয়ার কারণে লেখাটি বাম থেকে ডানে (Left to Right) যাবে।
-    breaking_news_html = """
-    <div style="background-color: yellow; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
-        <marquee direction="left" scrollamount="6" style="color: black; font-weight: bold; font-size: 16px;">
-            🚨 ব্রেকিং নিউজ: ২৬ অক্টোবর ২০২৬ তারিখ থেকে সকল ক্লাস নিয়মিত সময়ে অনুষ্ঠিত হবে! 🚨 ২৬/১০/২০২৬ তারিখে নতুন যোগদান করবেন দুইজন শিক্ষক। ১। কামরুজ্জামান ২। গৌতম চন্দ্র 
-        </marquee>
+    # 🚨 চেইনের মতো অনবরত ঘোরার CSS এবং HTML কোড
+    infinite_marquee_html = """
+    <div style="background-color: yellow; padding: 12px; border-radius: 5px; margin-bottom: 20px; overflow: hidden; white-space: nowrap; position: relative;">
+        
+        <style>
+            @keyframes marquee_left {
+                0% { transform: translateX(-100%); }
+                100% { transform: translateX(100%); }
+            }
+            .marquee-container {
+                display: inline-block;
+                width: 100%;
+            }
+            .marquee-text {
+                display: inline-block;
+                padding-left: 100%;
+                font-weight: bold;
+                font-size: 16px;
+                color: black;
+                animation: marquee_left 15s linear infinite;
+            }
+        </style>
+
+        <div class="marquee-container">
+            <div class="marquee-text">
+                🚨 ব্রেকিং নিউজ: ২৬ অক্টোবর ২০২৬ তারিখ থেকে সকল ক্লাস নিয়মিত সময়ে অনুষ্ঠিত হবে! 🔄 ২৬/১০/২০২৬ তারিখে নতুন যোগদান করবেন দুইজন শিক্ষক। ১। কামরুজ্জামান ২। গৌতম চন্দ্র ") 🔔 ২৫/১০/২০২৬ তারিখে উপনির্বাচনের পুলিং এজেন্ট হিসেবে ট্রেইনিং রেখা রানী, সন্ধ্যা সরকার এবং গোলাম রব্বানী স্যারের। 🚨
+            </div>
+        </div>
     </div>
     """
-    st.markdown(breaking_news_html, unsafe_allow_html=True)
+    st.markdown(infinite_marquee_html, unsafe_allow_html=True)
     
     # আপনার আগের নোটিশ সমূহ
     st.info("📌 **নোটিশ ১:** ১৬/১০/২০২৬ (শুক্রবার) থেকে ২৫/১০/২০২৬ (রবিবার)পর্যন্ত স্কুল বন্ধ থাকিবে। স্কুল ২৬/১০/২০২৬ (সোমবার) থেকে শুরু হবে।")
