@@ -31,8 +31,8 @@ if choice == "📢 নোটিশ বোর্ড":
     # 🚨 ব্রেকিং নিউজ সেকশন (নোটিশ ১ এর ঠিক উপরে যোগ করা হলো)
     # direction="right" দেওয়ার কারণে লেখাটি বাম থেকে ডানে (Left to Right) যাবে।
     breaking_news_html = """
-    <div style="background-color: #ff4b4b; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
-        <marquee direction="right" scrollamount="6" style="color: white; font-weight: bold; font-size: 16px;">
+    <div style="background-color: yellow; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+        <marquee direction="left" scrollamount="6" style="color: white; font-weight: bold; font-size: 16px;">
             🚨 ব্রেকিং নিউজ: ২৬ অক্টোবর ২০২৬ তারিখ থেকে সকল ক্লাস নিয়মিত সময়ে অনুষ্ঠিত হবে! 🚨 নতুন শিক্ষাক্রমের মূল্যায়ন নির্দেশিকা প্রকাশিত হয়েছে! 
         </marquee>
     </div>
