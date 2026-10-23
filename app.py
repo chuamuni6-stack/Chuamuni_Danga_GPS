@@ -386,37 +386,40 @@ elif choice == "🏫 এক নজরে স্কুল":
     # খ) কাস্টম রানিং মাসের (১১ থেকে ১০ তারিখ) ছুটি ফিল্টার
     df_monthly = df_teacher[(df_teacher["Date"] >= start_date) & (df_teacher["Date"] <= end_date)]
     
+    # --- নতুন লজিক: তারিখগুলোকে কমা দিয়ে জোড়া লাগানোর ফাংশন ---
+    def get_leave_dates(leave_type_name):
+        # নির্দিষ্ট ছুটির ধরণের ডাটা ফিল্টার করা
+        df_filtered = df_monthly[df_monthly["Leave_Type"] == leave_type_name]
+        if not df_filtered.empty:
+            # তারিখগুলোকে 'YYYY-MM-DD' ফরম্যাটে টেক্সট বানিয়ে কমা দিয়ে জোড়া দেওয়া
+            return ", ".join(df_filtered["Date"].dt.strftime('%Y-%m-%d').tolist())
+        return "নেই"  # কোনো ছুটি না থাকলে 'নেই' দেখাবে
+
     # ক্যাটাগরি অনুযায়ী রানিং মাসের আলাদা আলাদা ছুটির দিন যোগফল
     cl_days = df_monthly[df_monthly["Leave_Type"] == "নৈমিত্তিক ছুটি (CL)"]["Duration"].sum()
     training_days = df_monthly[df_monthly["Leave_Type"] == "ট্রেনিং (Training)"]["Duration"].sum()
     medical_days = df_monthly[df_monthly["Leave_Type"] == "চিকিৎসা জনিত ছুটি"]["Duration"].sum()
     total_monthly_leaves = df_monthly["Duration"].sum()
     
-    # স্ক্রিনে পরিসংখ্যান প্রদর্শন লেআউট
-    st.markdown(f"##### 📌 **{selected_teacher}** এর ছুটির বিবরণী:")
+    # প্রতিটি ছুটির ক্যাটাগরির জন্য তারিখের তালিকা তৈরি
+    cl_dates = get_leave_dates("নৈমিত্তিক ছুটি (CL)")
+    training_dates = get_leave_dates("ট্রেনিং (Training)")
+    medical_dates = get_leave_dates("চিকিৎসা জনিত ছুটি")
     
-    m_col1, m_col2 = st.columns(2)
-    with m_col1:
-        st.metric(label=f"📅 চলতি বছরে মোট ছুটি ({current_year})", value=f"{total_yearly_leaves} দিন")
-    with m_col2:
-        st.metric(label=f"🌙 রানিং মাসে মোট ছুটি ({start_date.strftime('%d/%m')} থেকে {end_date.strftime('%d/%m')})", value=f"{total_monthly_leaves} দিন")
-        
-    # ক্যাটাগরিভিত্তিক ছুটির বিস্তারিত ব্রেকডাউন টেবিল
-        breakdown_data = {
+    # সর্বমোট লাইনের জন্য সবগুলো তারিখ একসাথে কমা দিয়ে জোড়া দেওয়া
+    if not df_monthly.empty:
+        all_monthly_dates = ", ".join(df_monthly["Date"].dt.strftime('%Y-%m-%d').tolist())
+    else:
+        all_monthly_dates = "নেই"
+
+    # ক্যাটাগরিভিত্তিক ছুটির বিস্তারিত ব্রেকডাউন টেবিল (নতুন কলামসহ)
+    breakdown_data = {
         "ছুটির ধরণ (Category)": ["নৈমিত্তিক ছুটি (CL)", "ট্রেনিং (Training)", "চিকিৎসা জনিত ছুটি", "🚨 সর্বমোট (এই মাসে)"],
-        "কাটানো ছুটি (দিন)": [f"{cl_days} দিন", f"{training_days} দিন", f"{medical_days} দিন", f"{total_monthly_leaves} দিন"]
+        "কাটানো ছুটি (দিন)": [f"{cl_days} দিন", f"{training_days} দিন", f"{medical_days} দিন", f"{total_monthly_leaves} দিন"],
+        "ছুটির তারিখ (Date)": [cl_dates, training_dates, medical_dates, all_monthly_dates] # 👈 এই নতুন কলামটি যোগ হলো
     }
+    
     st.table(pd.DataFrame(breakdown_data))
-    
-    # ⬇️ ঠিক এই লাইনের নিচে নিচের ৩টি লাইন নতুন যোগ করুন ⬇️
-    st.markdown("##### 📅 এই মাসে কাটানো ছুটির তারিখ ও বিস্তারিত তালিকা:")
-    
-    # তারিখের ফরম্যাটটি সুন্দর করে দেখানোর জন্য (ঐচ্ছিক কিন্তু সুন্দর দেখাবে)
-    df_monthly_display = df_monthly.copy()
-    df_monthly_display["Date"] = df_monthly_display["Date"].dt.strftime('%Y-%m-%d')
-    
-    # স্ক্রিনে আসল টেবিলটি (তারিখসহ) প্রদর্শন
-    st.dataframe(df_monthly_display[["Leave_Type", "Duration", "Date"]], hide_index=True)
     
     st.markdown("---")
     
