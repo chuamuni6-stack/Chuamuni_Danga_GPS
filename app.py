@@ -343,10 +343,10 @@ elif choice == "🏫 এক নজরে স্কুল":
     # ৩. শিক্ষকদের বার্ষিক ও মাসিক ছুটির পরিসংখ্যান ও ক্যাটাগরিভিত্তিক যোগফল
     st.markdown("#### 📊 শিক্ষকদের ছুটির মাসিক ও বার্ষিক প্রতিবেদন")
     
-    # স্কুলের মূল ছুটির রেকর্ড ডাটাসেট (স্কুলের তথ্য অনুযায়ী এখানে ছুটির দিনগুলো সাজানো হয়েছে)
+    # স্কুলের মূল ছুটির রেকর্ড ডাটাসেট (Duration লাইনে ছুটির দিন সংখ্যা [২, ৫, ১০, ৩] ফিক্স করা হয়েছে)
     attendance_data = {
         "Corporate_Name": ["মো: মোস্তাফিজুর রহমান", "মো: মোস্তাফিজুর রহমান", "মোসাম্মৎ রেহানা পারভীন", "মো: মোস্তাফিজুর রহমান"],
-        "Leave_Type": ["नৈমিত্তিক ছুটি (CL)", "চিকিৎসা জনিত ছুটি", "ট্রেনিং (Training)", "নৈমিত্তিক ছুটি (CL)"],
+        "Leave_Type": ["নৈমিত্তিক ছুটি (CL)", "চিকিৎসা জনিত ছুটি", "ট্রেনিং (Training)", "নৈমিত্তিক ছুটি (CL)"],
         "Duration":,
         "Date": ["2026-10-15", "2026-08-20", "2026-10-05", "2026-10-25"]
     }
@@ -371,7 +371,7 @@ elif choice == "🏫 এক নজরে স্কুল":
             start_date = datetime.datetime(today.year, today.month - 1, 11)
         end_date = datetime.datetime(today.year, today.month, 10)
 
-    # শিক্ষক নির্বাচন ড্রপডাউন মেনু
+    # शिक्षक নির্বাচন ড্রপডাউন মেনু
     teacher_list = ["মো: মোস্তাফিজুর রহমান", "মোসাম্মৎ রেহানা পারভীন"]
     selected_teacher = st.selectbox("👤 শিক্ষকের নাম নির্বাচন করুন:", teacher_list)
     
@@ -387,7 +387,7 @@ elif choice == "🏫 এক নজরে স্কুল":
     df_monthly = df_teacher[(df_teacher["Date"] >= start_date) & (df_teacher["Date"] <= end_date)]
     
     # ক্যাটাগরি অনুযায়ী রানিং মাসের আলাদা আলাদা ছুটির দিন যোগফল
-    cl_days = df_monthly[df_monthly["Leave_Type"] == "नৈমিত্তিক ছুটি (CL)"]["Duration"].sum()
+    cl_days = df_monthly[df_monthly["Leave_Type"] == "নৈমিত্তিক ছুটি (CL)"]["Duration"].sum()
     training_days = df_monthly[df_monthly["Leave_Type"] == "ট্রেনিং (Training)"]["Duration"].sum()
     medical_days = df_monthly[df_monthly["Leave_Type"] == "চিকিৎসা জনিত ছুটি"]["Duration"].sum()
     total_monthly_leaves = df_monthly["Duration"].sum()
