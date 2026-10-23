@@ -28,14 +28,14 @@ st.markdown("---")
 if choice == "📢 নোটিশ বোর্ড":
     st.subheader("📢 সর্বশেষ নোটিশ সমূহ")
     
-    # 🚨 চেইনের মতো অনবরত ঘোরার CSS এবং HTML কোড
+    # 🚨 বামুখী চেইন অ্যানিমেশন (হলুদ ব্যাকগ্রাউন্ড, কালো টেক্সট এবং সাদা বর্ডার)
     infinite_marquee_html = """
-    <div style="background-color: yellow; padding: 12px; border-radius: 5px; margin-bottom: 20px; overflow: hidden; white-space: nowrap; position: relative;">
+    <div style="background-color: #ffeb3b; padding: 12px; border: 2px solid white; border-radius: 5px; margin-bottom: 20px; overflow: hidden; white-space: nowrap; position: relative;">
         
         <style>
             @keyframes marquee_left {
-                0% { transform: translateX(-100%); }
-                100% { transform: translateX(100%); }
+                0% { transform: translateX(100%); }
+                100% { transform: translateX(-100%); }
             }
             .marquee-container {
                 display: inline-block;
@@ -53,7 +53,7 @@ if choice == "📢 নোটিশ বোর্ড":
 
         <div class="marquee-container">
             <div class="marquee-text">
-                🚨 ব্রেকিং নিউজ: ২৬ অক্টোবর ২০২৬ তারিখ থেকে সকল ক্লাস নিয়মিত সময়ে অনুষ্ঠিত হবে! 🔄 ২৬/১০/২০২৬ তারিখে নতুন যোগদান করবেন দুইজন শিক্ষক। ১। কামরুজ্জামান ২। গৌতম চন্দ্র ") 🔔 ২৫/১০/২০২৬ তারিখে উপনির্বাচনের পুলিং এজেন্ট হিসেবে ট্রেইনিং রেখা রানী, সন্ধ্যা সরকার এবং গোলাম রব্বানী স্যারের। 🚨
+                🚨 ব্রেকিং নিউজ: ২৬ অক্টোবর ২০২৬ তারিখ থেকে সকল ক্লাস নিয়মিত সময়ে অনুষ্ঠিত হবে! 🔄 নতুন শিক্ষাক্রমের মূল্যায়ন নির্দেশিকা প্রকাশিত হয়েছে! 🔔 প্রাথমিক বৃত্তি পরীক্ষা আগামী ২০ ডিসেম্বর থেকে শুরু! 🚨
             </div>
         </div>
     </div>
