@@ -33,7 +33,7 @@ if choice == "📢 নোটিশ বোর্ড":
     breaking_news_html = """
     <div style="background-color: yellow; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
         <marquee direction="left" scrollamount="6" style="color: black; font-weight: bold; font-size: 16px;">
-            🚨 ব্রেকিং নিউজ: ২৬ অক্টোবর ২০২৬ তারিখ থেকে সকল ক্লাস নিয়মিত সময়ে অনুষ্ঠিত হবে! 🚨 নতুন শিক্ষাক্রমের মূল্যায়ন নির্দেশিকা প্রকাশিত হয়েছে! 
+            🚨 ব্রেকিং নিউজ: ২৬ অক্টোবর ২০২৬ তারিখ থেকে সকল ক্লাস নিয়মিত সময়ে অনুষ্ঠিত হবে! 🚨 ২৬/১০/২০২৬ তারিখে নতুন যোগদান করবেন দুইজন শিক্ষক। ১। কামরুজ্জামান ২। গৌতম চন্দ্র 
         </marquee>
     </div>
     """
