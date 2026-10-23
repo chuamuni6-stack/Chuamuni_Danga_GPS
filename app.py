@@ -371,8 +371,8 @@ elif choice == "🏫 এক নজরে স্কুল":
             start_date = datetime.datetime(today.year, today.month - 1, 11)
         end_date = datetime.datetime(today.year, today.month, 10)
 
-    # शिक्षक নির্বাচন ড্রপডাউন মেনু
-    teacher_list = ["মো: মোস্তাফিজুর রহমান", "মোসাম্মৎ রেহানা পারভীন"]
+    # শিক্ষক নির্বাচন ড্রপডাউন মেনু
+    teacher_list = ["মো: মোস্তাফিজুর রহমান", "সন্ধ্যা সরকার", "মোঃ কামরুজ্জামান", "গৌতম সি.বি."]
     selected_teacher = st.selectbox("👤 শিক্ষকের নাম নির্বাচন করুন:", teacher_list)
     
     # নির্বাচিত শিক্ষকের ডাটা ফিল্টার
