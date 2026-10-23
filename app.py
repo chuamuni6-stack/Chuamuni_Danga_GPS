@@ -630,15 +630,16 @@ elif choice == "📝 ভর্তি তথ্য ও ফরম":
             else:
                 st.info("📂 এখনো কোনো নতুন ভর্তি আবেদন জমা পড়েনি।")
 
-# ৭. ছবি গ্যালারি (ইনডেন্টেশন ফিক্সড করা হয়েছে)
+# ৭. ছবি গ্যালারি (FileNotFoundError থেকে বাঁচার নিরাপদ কোড)
 elif choice == "🖼️ ছবি গ্যালারি":
     st.subheader("🖼️ স্কুলের বিভিন্ন অনুষ্ঠান ও খেলাধুলার ছবি")
     
-    # সব ছবির লিস্টটি এখন 'elif' এর ভেতরে ৪ স্পেস ডানে থাকবে
+    import os  # ফাইলের অস্তিত্ব চেক করার জন্য এই লাইব্রেরি লাগবে
+    
     all_pics = [
         {"path": "school_pic1.jpg", "cap": "ফ্রি প্যালেস্টাইন"},
         {"path": "school_pic2.jpg", "cap": "ফ্রি প্যালেস্টাইন"},
-        {"path": "school_pic5.jpg", "cap": "গাছ লাগানোর ছবি"},
+        {"path": "school_pic5.jpg", "cap": "Chobi 1"},
         {"path": "school_pic6.jpg", "cap": "Chobi 2"},
         {"path": "school_pic7.jpg", "cap": "Chobi 3"},
         {"path": "school_pic8.jpg", "cap": "Chobi 4"},
@@ -654,16 +655,21 @@ elif choice == "🖼️ ছবি গ্যালারি":
 
     # লুপ চালিয়ে ২টি কলামের গ্রিড তৈরি
     for i in range(0, len(all_pics), 2):
-        # প্রতিবার লুপ ঘোরার সময় নতুন একটি রো (২টি কলাম) তৈরি হবে
         col1, col2 = st.columns(2)
 
-        # ১ম কলামে ছবি বসানো
+        # ১ম কলামে ছবি বসানোর আগে চেক করা
         with col1:
             pic = all_pics[i]
-            st.image(pic["path"], caption=pic["cap"], use_column_width=True)
+            if os.path.exists(pic["path"]):  # 👈 যদি ছবি ফোল্ডারে থাকে
+                st.image(pic["path"], caption=pic["cap"], use_column_width=True)
+            else:  # 👈 ছবি না থাকলে ক্র্যাশ না করে ওয়ার্নিং দেবে
+                st.warning(f"📷 '{pic['path']}' ছবিটি খুঁজে পাওয়া যায়নি।")
 
-        # ২য় কলামে ছবি বসানো (যদি পরবর্তী ছবি থাকে)
+        # ২য় কলামে ছবি বসানোর আগে চেক করা
         if i + 1 < len(all_pics):
             with col2:
                 pic = all_pics[i + 1]
-                st.image(pic["path"], caption=pic["cap"], use_column_width=True)
+                if os.path.exists(pic["path"]):  # 👈 যদি ছবি ফোল্ডারে থাকে
+                    st.image(pic["path"], caption=pic["cap"], use_column_width=True)
+                else:  # 👈 ছবি না থাকলে ওয়ার্নিং দেবে
+                    st.warning(f"📷 '{pic['path']}' ছবিটি খুঁজে পাওয়া যায়নি।")
