@@ -50,7 +50,6 @@ infinite_marquee_html = """
             animation: marquee_left 15s linear infinite;
         }
     </style>
-
     <div class="marquee-container">
         <div class="marquee-text">
             🚨 ব্রেকিং নিউজ: ২৬ অক্টোবর ২০২৬ তারিখ থেকে সকল ক্লাস নিয়মিত সময়ে অনুষ্ঠিত হবে! 🔄 নতুন শিক্ষাক্রমের মূল্যায়ন নির্দেশিকা প্রকাশিত হয়েছে! 🔔 প্রাথমিক বৃত্তি পরীক্ষা আগামী ২০ ডিসেম্বর থেকে শুরু! 🚨
