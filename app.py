@@ -23,7 +23,9 @@ def get_admission_sheet():
     client = gspread.authorize(creds)
     return client.open_by_key(st.secrets["sheet_id"]).sheet1
 
-
+# স্কুলের ছবি (সবার উপরে)
+if os.path.exists("school_pic1.jpg"):
+    st.image("school_pic1.jpg", use_container_width=True)
 # অ্যাপের মূল শিরোনাম (স্কুলের নতুন নাম যুক্ত করা হয়েছে)
 st.markdown("<h1 style='text-align: center;'>🏫 ২১ চুয়ামনি ডাংগা সরকারি প্রাথমিক বিদ্যালয়</h1>", unsafe_allow_html=True)
 # ডাবল স্পেস
