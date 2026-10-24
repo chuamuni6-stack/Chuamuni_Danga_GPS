@@ -1,9 +1,28 @@
 import streamlit as st
 import pandas as pd
 import os
+import gspread
+from google.oauth2.service_account import Credentials
 
 # মোবাইলের স্ক্রিনের জন্য লেআউট সেট করা
 st.set_page_config(page_title="২১ চুয়ামনি ডাংগা সরকারি প্রাথমিক বিদ্যালয়", page_icon="🏫", layout="centered")
+
+ADMISSION_COLUMNS = ["শিক্ষার্থীর নাম", "ভর্তির শ্রেণী", "অভিভাবকের নাম", "মোবাইল নম্বর"]
+
+
+@st.cache_resource
+def get_admission_sheet():
+    """গুগল শীটের সাথে সংযোগ তৈরি করে (একবারই চলে)।"""
+    scopes = [
+        "https://www.googleapis.com/auth/spreadsheets",
+        "https://www.googleapis.com/auth/drive",
+    ]
+    creds = Credentials.from_service_account_info(
+        dict(st.secrets["gcp_service_account"]), scopes=scopes
+    )
+    client = gspread.authorize(creds)
+    return client.open_by_key(st.secrets["sheet_id"]).sheet1
+
 
 # অ্যাপের মূল শিরোনাম (স্কুলের নতুন নাম যুক্ত করা হয়েছে)
 st.markdown("<h1 style='text-align: center;'>🏫 ২১ চুয়ামনি ডাংগা সরকারি প্রাথমিক বিদ্যালয়</h1>", unsafe_allow_html=True)
@@ -551,84 +570,73 @@ elif choice == "🔍 রেজাল্ট ও আইডি":
             st.error("❌ আইডি পাওয়া যায়নি।")
 
 # ==========================================
-# ৬. ভর্তি ফরম সেকশন (সম্পূর্ণ ফ্রেশ ডাটাবেজ টেবিল লজিকসহ)
+# ৬. ভর্তি ফরম সেকশন (গুগল শীট)
 # ==========================================
 elif choice == "📝 ভর্তি তথ্য ও ফরম":
     st.markdown("### 📝 নতুন ছাত্র-ছাত্রী ভর্তি তথ্য ও আবেদন")
-    
+
     st.markdown("#### 📩 অনলাইনের সাধারণ প্রাথমিক আবেদন ফরম")
     with st.form("admission_form"):
-        student_name = st.text_input("শিক্ষার্থীর পুরো নাম (বাংলায়):")
-        apply_class = st.selectbox("ভর্তির ইচ্ছুক শ্রেণী:", ["প্রাক-প্রাথমিক", "১ম শ্রেণী", "২য় শ্রেণী", "৩য় শ্রেণী", "৪র্থ শ্রেণী", "৫ম শ্রেণী"])
+        student_name = st.text_input("শিক্ষার্থীর পুরো নাম (বাংলায়):")
+        apply_class = st.selectbox(
+            "ভর্তির ইচ্ছুক শ্রেণী:",
+            ["প্রাক-প্রাথমিক", "১ম শ্রেণী", "২য় শ্রেণী", "৩য় শ্রেণী", "৪র্থ শ্রেণী", "৫ম শ্রেণী"],
+        )
         guardian_name = st.text_input("অভিভাবকের নাম:")
         phone_number = st.text_input("যোগাযোগের জন্য মোবাইল নম্বর:")
-        
+
         submitted = st.form_submit_button("🚀 আবেদন জমা দিন")
-        
+
         if submitted:
             if student_name and phone_number:
-                csv_file = "admissions.csv"
-                
-                # সম্পূর্ণ বিশুদ্ধ বাংলা বানানে নতুন ডেটা
-                new_data = pd.DataFrame([{
-                    "শিক্ষার্থীর নাম": student_name,
-                    "ভর্তির শ্রেণী": apply_class,
-                    "অভিভাবকের নাম": guardian_name,
-                    "মোবাইল নম্বর": phone_number
-                }])
-                
-                # যদি ফাইল আগে থেকে থাকে
-                if os.path.exists(csv_file):
-                    try:
-                        old_data = pd.read_csv(csv_file)
-                        # যদি আগের ফাইলে কোনো ভুল কলাম বা None থাকে, তবে তা পরিষ্কার করে শুধু সঠিক কলামগুলো রাখবে
-                        valid_columns = ["শিক্ষার্থীর নাম", "ভর্তির শ্রেণী", "অভিভাবকের নাম", "মোবাইল নম্বর"]
-                        old_data = old_data.reindex(columns=valid_columns)
-                        updated_data = pd.concat([old_data, new_data], ignore_index=True)
-                        updated_data.to_csv(csv_file, index=False)
-                    except:
-                        new_data.to_csv(csv_file, index=False)
-                else:
-                    new_data.to_csv(csv_file, index=False)
-                
-                st.balloons()
-                st.success(f"🎉 আবেদন সফল হয়েছে! {student_name}-এর প্রাথমিক তথ্য ডাটাবেজ ফাইলে সংরক্ষিত হয়েছে।")
+                try:
+                    sheet = get_admission_sheet()
+                    # RAW দেওয়ায় মোবাইল নম্বরের শুরুর ০ মুছবে না
+                    sheet.append_row(
+                        [student_name, apply_class, guardian_name, phone_number],
+                        value_input_option="RAW",
+                    )
+                    st.balloons()
+                    st.success(f"🎉 আবেদন সফল হয়েছে! {student_name}-এর তথ্য গুগল শীটে সংরক্ষিত হয়েছে।")
+                except Exception as e:
+                    st.error("❌ আবেদন সংরক্ষণ করা যায়নি। কিছুক্ষণ পর আবার চেষ্টা করুন।")
+                    st.caption(f"ত্রুটি: {e}")
             else:
-                st.warning("⚠️ দয়া করে শিক্ষার্থীর নাম এবং মোবাইল নম্বর অবশ্যই সঠিকভাবে পূরণ করুন।")
+                st.warning("⚠️ দয়া করে শিক্ষার্থীর নাম এবং মোবাইল নম্বর অবশ্যই সঠিকভাবে পূরণ করুন।")
 
-    # প্রধান শিক্ষকের গোপন প্যানেল (ভুল ডেটা ডিলিট করার বোতামসহ)
+    # প্রধান শিক্ষকের গোপন প্যানেল
     st.markdown("---")
     with st.expander("🔐 প্রধান শিক্ষকের প্যানেল (আবেদন তালিকা ডাউনলোড)"):
-        password = st.text_input("গোপন পাসওয়ার্ড দিন:", type="password")
-        if password == "admin123":
-            
-            # ডাটাবেজ ডিলিট করার বোতাম (রিসেট করার জন্য)
-            if st.button("🗑️ আগের সকল ভুল টেস্ট ডেটা সম্পূর্ণ মুছে ফেলুন (রিসেট করুন)"):
-                if os.path.exists("admissions.csv"):
-                    os.remove("admissions.csv")
-                    st.success("♻️ ডাটাবেজ সফলভাবে রিসেট করা হয়েছে! পেজটি একবার রিফ্রেশ (Refresh) করুন।")
+        password = st.text_input("গোপন পাসওয়ার্ড দিন:", type="password")
+        if password and password == st.secrets["admin_password"]:
+            try:
+                sheet = get_admission_sheet()
+
+                # সব আবেদন মুছে রিসেট করার বোতাম (প্রথম সারির হেডার থাকবে)
+                if st.button("🗑️ সকল আবেদন মুছে ফেলুন (রিসেট করুন)"):
+                    sheet.clear()
+                    sheet.append_row(ADMISSION_COLUMNS)
+                    st.success("♻️ তালিকা রিসেট করা হয়েছে! পেজটি রিফ্রেশ করুন।")
+
+                st.markdown("---")
+
+                rows = sheet.get_all_values()
+                if len(rows) > 1:
+                    df_download = pd.DataFrame(rows[1:], columns=rows[0])
+                    st.dataframe(df_download)
+                    st.download_button(
+                        label="📥 সম্পূর্ণ এক্সেল তালিকা (CSV) ডাউনলোড করুন",
+                        data=df_download.to_csv(index=False).encode("utf-8-sig"),
+                        file_name="School_Admissions_List.csv",
+                        mime="text/csv",
+                    )
                 else:
-                    st.info("📂 ডাটাবেজ অলরেডি পরিষ্কার আছে।")
-            
-            st.markdown("---")
-            
-            # টেবিল প্রদর্শন ও ডাউনলোড
-            if os.path.exists("admissions.csv"):
-                df_download = pd.read_csv("admissions.csv")
-                
-                # ডাবল কলাম ফিল্টার লজিক
-                valid_columns = ["শিক্ষার্থীর নাম", "ভর্তির শ্রেণী", "অভিভাবকের নাম", "মোবাইল নম্বর"]
-                df_download = df_download.reindex(columns=valid_columns)
-                
-                st.dataframe(df_download)
-                st.download_button(
-                    label="📥 সম্পূর্ণ এক্সেল তালিকা (CSV) ডাউনলোড করুন",
-                    data=df_download.to_csv(index=False).encode('utf-8'),
-                    file_name="School_Admissions_List.csv",
-                    mime="text/csv"
-                )
-            else:
-                st.info("📂 এখনো কোনো নতুন ভর্তি আবেদন জমা পড়েনি।")
+                    st.info("📂 এখনো কোনো নতুন ভর্তি আবেদন জমা পড়েনি।")
+            except Exception as e:
+                st.error("❌ গুগল শীট থেকে তথ্য আনা যায়নি।")
+                st.caption(f"ত্রুটি: {e}")
+        elif password:
+            st.error("❌ পাসওয়ার্ড ভুল।")
 
 # ৭. ছবি গ্যালারি (FileNotFoundError থেকে বাঁচার নিরাপদ কোড)
 elif choice == "🖼️ ছবি গ্যালারি":
