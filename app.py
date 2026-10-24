@@ -460,7 +460,43 @@ elif choice == "🏫 এক নজরে স্কুল":
         "ছুটির তারিখ (Date)": [cl_dates, training_dates, medical_dates, all_monthly_dates]
     }
     st.table(pd.DataFrame(breakdown_data))
-    
+
+        # 📆 মাস অনুযায়ী ছুটি দেখুন (১১ তারিখ থেকে পরের মাসের ১০ তারিখ)
+    st.markdown("##### 📆 মাস অনুযায়ী ছুটির তালিকা")
+    month_names = ["জানুয়ারি", "ফেব্রুয়ারি", "মার্চ", "এপ্রিল", "মে", "জুন",
+                   "জুলাই", "আগস্ট", "সেপ্টেম্বর", "অক্টোবর", "নভেম্বর", "ডিসেম্বর"]
+
+    cycle_year = start_date.year  # চলতি চক্র যে বছরে শুরু হয়েছে
+    selected_month = st.selectbox(
+        "📅 মাস নির্বাচন করুন (১১ তারিখ থেকে পরের মাসের ১০ তারিখ):",
+        month_names,
+        index=start_date.month - 1
+    )
+    month_number = month_names.index(selected_month) + 1
+
+    # নির্বাচিত মাসের চক্রের শুরু ও শেষ তারিখ
+    cycle_start = datetime.datetime(cycle_year, month_number, 11)
+    if month_number == 12:
+        cycle_end = datetime.datetime(cycle_year + 1, 1, 10)
+    else:
+        cycle_end = datetime.datetime(cycle_year, month_number + 1, 10)
+    next_month_name = month_names[month_number % 12]
+
+    st.caption(f"🗓️ সময়কাল: ১১ {selected_month} {cycle_start.year} থেকে ১০ {next_month_name} {cycle_end.year}")
+
+    df_selected_month = df_teacher[
+        (df_teacher["Date"] >= cycle_start) &
+        (df_teacher["Date"] <= cycle_end)
+    ]
+
+    if df_selected_month.empty:
+        st.info(f"ℹ️ এই সময়কালে {selected_teacher}-এর কোনো ছুটি নেই।")
+    else:
+        st.metric(label=f"{selected_month} মাসের চক্রে মোট ছুটি", value=f"{df_selected_month['Duration'].sum()} দিন")
+        df_show = df_selected_month[["Date", "Leave_Type", "Duration"]].copy()
+        df_show["Date"] = df_show["Date"].dt.strftime("%d/%m/%Y")
+        df_show.columns = ["তারিখ", "ছুটির ধরণ", "দিন"]
+        st.table(df_show)
     st.markdown("---")
     
     # ৩. পাক্ষিক পরীক্ষার তথ্য ও রুটিন
