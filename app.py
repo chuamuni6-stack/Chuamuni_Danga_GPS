@@ -35,6 +35,17 @@ st.markdown("<br>", unsafe_allow_html=True)
 st.write("<h4 style='text-align: center;'>ডিজিটাল স্কুলে স্বাগতম! মেনু থেকে আপনার প্রয়োজনীয় অপশনটি বেছে নিন।</h4>", unsafe_allow_html=True)
 st.markdown("---")
 
+    # 🚨 ব্রেকিং নিউজ সেকশন (নোটিশ ১ এর ঠিক উপরে যোগ করা হলো)
+    # direction="right" দেওয়ার কারণে লেখাটি বাম থেকে ডানে (Left to Right) যাবে।
+    breaking_news_html = """
+    <div style="background-color: yellow; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+        <marquee direction="left" scrollamount="6" style="color: black; font-weight: bold; font-size: 16px;">
+            🚨 ব্রেকিং নিউজ: ২৬ অক্টোবর ২০২৬ তারিখ থেকে সকল ক্লাস নিয়মিত সময়ে অনুষ্ঠিত হবে! 🚨 ২৬/১০/২০২৬ তারিখে নতুন যোগদান করবেন দুইজন শিক্ষক। ১। কামরুজ্জামান ২। গৌতম চন্দ্র 🚨 পুলিং এজেন্ট ট্রেইনিং ২৫/১০/২০২৬- সন্ধ্যা সরকার, রেখা রানি, গোলাম রব্বানী🚨  
+        </marquee>
+    </div>
+    """
+    st.markdown(breaking_news_html, unsafe_allow_html=True)
+
 # মেনু নির্বাচন
 menu = [
     "📢 নোটিশ বোর্ড", 
@@ -50,17 +61,6 @@ st.markdown("---")
 
 if choice == "📢 নোটিশ বোর্ড":
     st.subheader("📢 সর্বশেষ নোটিশ সমূহ")
-    
-    # 🚨 ব্রেকিং নিউজ সেকশন (নোটিশ ১ এর ঠিক উপরে যোগ করা হলো)
-    # direction="right" দেওয়ার কারণে লেখাটি বাম থেকে ডানে (Left to Right) যাবে।
-    breaking_news_html = """
-    <div style="background-color: yellow; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
-        <marquee direction="left" scrollamount="6" style="color: black; font-weight: bold; font-size: 16px;">
-            🚨 ব্রেকিং নিউজ: ২৬ অক্টোবর ২০২৬ তারিখ থেকে সকল ক্লাস নিয়মিত সময়ে অনুষ্ঠিত হবে! 🚨 ২৬/১০/২০২৬ তারিখে নতুন যোগদান করবেন দুইজন শিক্ষক। ১। কামরুজ্জামান ২। গৌতম চন্দ্র 🚨 পুলিং এজেন্ট ট্রেইনিং ২৫/১০/২০২৬- সন্ধ্যা সরকার, রেখা রানি, গোলাম রব্বানী🚨  
-        </marquee>
-    </div>
-    """
-    st.markdown(breaking_news_html, unsafe_allow_html=True)
     
     # আপনার আগের নোটিশ সমূহ
     st.info("📌 **নোটিশ ১:** ১৬/১০/২০২৬ (শুক্রবার) থেকে ২৫/১০/২০২৬ (রবিবার)পর্যন্ত স্কুল বন্ধ থাকিবে। স্কুল ২৬/১০/২০২৬ (সোমবার) থেকে শুরু হবে।")
